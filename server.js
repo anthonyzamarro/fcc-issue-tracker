@@ -36,9 +36,9 @@ app.route('/')
 
 // fcc project
 app.route('/fcc')
-    .get((req, res) => {
-      res.sendFile(process.cwd() + '/views/fcc.html');
-    })
+  .get((req, res) => {
+    res.sendFile(process.cwd() + '/views/fcc.html');
+  })
 
 //For FCC testing purposes
 fccTestingRoutes(app);

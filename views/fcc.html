@@ -18,7 +18,7 @@
       <div id='submitNewIssue'>
         <br>
         <h3>Submit a new issue:</h3>
-        <form id="newIssue" method="post" action="/api/">
+        <form id="newIssue" method="post" action="/api/issues/fcc">
           <input type="text" name="issue_title" placeholder="*Title" style="width: 320px; margin-bottom: 3px;" required=''><br>
           <textarea type="text" name="issue_text" placeholder="*Text" style="width: 320px; height: 100px;" required=''></textarea><br>
           <input type="text" name="created_by" placeholder="*Created by" style="width: 100px" required=''>
@@ -48,7 +48,6 @@
           {
             var issues= [];
             data.forEach(function(ele) {
-              console.log(ele);
               var openstatus;
               (ele.open) ? openstatus = 'open' : openstatus = 'closed';
               var single = [
@@ -78,7 +77,8 @@
             type: "POST",
             url: url,
             data: $(this).serialize(),
-            success: function(data) { 
+            success: function(data) {
+              console.log(data);
               window.location.reload(true); 
             }
           });
