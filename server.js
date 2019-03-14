@@ -22,17 +22,23 @@ app.use(helmet.xssFilter());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-//Sample front-end
-app.route('/:project/')
-  .get(function (req, res) {
-    res.sendFile(process.cwd() + '/views/issue.html');
-  });
+// //Sample front-end
+// app.route('/:project/')
+//   .get(function (req, res) {
+//     res.sendFile(process.cwd() + '/views/issue.html');
+//   });
 
 //Index page (static HTML)
 app.route('/')
   .get(function (req, res) {
     res.sendFile(process.cwd() + '/views/index.html');
   });
+
+// fcc project
+app.route('/fcc')
+    .get((req, res) => {
+      res.sendFile(process.cwd() + '/views/fcc.html');
+    })
 
 //For FCC testing purposes
 fccTestingRoutes(app);
@@ -47,7 +53,7 @@ app.use(function(req, res, next) {
     .send('Not Found');
 });
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3000;
 
 //Start our server and tests!
 app.listen(port, function () {

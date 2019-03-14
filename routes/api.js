@@ -20,7 +20,7 @@ module.exports = function (app) {
   
     .get(function (req, res){
       var project = req.params.project;
-      console.log(`GET project ${project}`);
+      // console.log(`GET project ${project}`);
     })
     
     .post(function (req, res){
