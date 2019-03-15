@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
-mongoose.connect(process.env.DATABASE || 'mongodb://localhost/exercise-track' )
+// require dotenv to read .env variables
+require('dotenv').config();
+mongoose.connect(process.env.DATABASE, { useNewUrlParser: true })
 
 const Schema = mongoose.Schema;
 

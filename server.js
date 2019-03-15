@@ -1,16 +1,18 @@
 'use strict';
 
-var express     = require('express');
-var bodyParser  = require('body-parser');
-var expect      = require('chai').expect;
-var cors        = require('cors');
-var helmet      = require('helmet');
+const express     = require('express');
+const bodyParser  = require('body-parser');
+const expect      = require('chai').expect;
+const cors        = require('cors');
+const helmet      = require('helmet');
+const mongoose    = require('mongoose');
 
-var apiRoutes         = require('./routes/api.js');
-var fccTestingRoutes  = require('./routes/fcctesting.js');
-var runner            = require('./test-runner');
+const apiRoutes         = require('./routes/api.js');
+const fccTestingRoutes  = require('./routes/fcctesting.js');
+const runner            = require('./test-runner');
+const CONNECTION_STRING = process.env.DATABASE;
 
-var app = express();
+const app = express();
 
 app.use('/public', express.static(process.cwd() + '/public'));
 
@@ -18,7 +20,6 @@ app.use(cors({origin: '*'})); //For FCC testing purposes only
 
 // prevent XSS attack
 app.use(helmet.xssFilter());
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -44,7 +45,7 @@ app.route('/fcc')
 fccTestingRoutes(app);
 
 //Routing for API 
-apiRoutes(app);  
+apiRoutes(app);
     
 //404 Not Found Middleware
 app.use(function(req, res, next) {
@@ -55,21 +56,22 @@ app.use(function(req, res, next) {
 
 const port = process.env.PORT || 3000;
 
-//Start our server and tests!
-app.listen(port, function () {
-  console.log("Listening on port " + port);
-  if(process.env.NODE_ENV==='test') {
-    console.log('Running Tests...');
-    setTimeout(function () {
-      try {
-        runner.run();
-      } catch(e) {
-        var error = e;
-          console.log('Tests are not valid:');
-          console.log(error);
-      }
-    }, 3500);
-  }
-});
+  app.listen(port, function () {
+    console.log("Listening on port " + port);
+    if(process.env.NODE_ENV==='test') {
+      console.log('Running Tests...');
+      setTimeout(function () {
+        try {
+          runner.run();
+        } catch(e) {
+          const error = e;
+            console.log('Tests are not valid:');
+            console.log(error);
+        }
+      }, 3500);
+    }
+  });
+
+
 
 module.exports = app; //for testing
