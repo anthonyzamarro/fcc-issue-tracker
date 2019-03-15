@@ -1,0 +1,1 @@
+const Issue = require('./IssueSchema');
