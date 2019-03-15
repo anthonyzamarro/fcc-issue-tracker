@@ -15,11 +15,11 @@ chai.use(chaiHttp);
 
 suite('Functional Tests', function() {
   
-    suite('POST /api/issues/{project} => object with issue data', function() {
+    suite('POST /api/issues/fcc => object with issue data', function() {
       
       test('Every field filled in', function(done) {
        chai.request(server)
-        .post('/api/issues/test')
+        .post('/api/issues/fcc')
         .send({
           issue_title: 'Title',
           issue_text: 'text',
@@ -29,7 +29,6 @@ suite('Functional Tests', function() {
         })
         .end(function(err, res){
           assert.equal(res.status, 200);
-          
           //fill me in too!
           
           done();
@@ -46,7 +45,7 @@ suite('Functional Tests', function() {
       
     });
     
-    suite('PUT /api/issues/{project} => text', function() {
+    suite('PUT /api/issues/fcc => text', function() {
       
       test('No body', function(done) {
         
@@ -62,7 +61,7 @@ suite('Functional Tests', function() {
       
     });
     
-    suite('GET /api/issues/{project} => Array of objects with issue data', function() {
+    suite('GET /api/issues/fcc => Array of objects with issue data', function() {
       
       test('No filter', function(done) {
         chai.request(server)
@@ -94,7 +93,7 @@ suite('Functional Tests', function() {
       
     });
     
-    suite('DELETE /api/issues/{project} => text', function() {
+    suite('DELETE /api/issues/fcc => text', function() {
       
       test('No _id', function(done) {
         
