@@ -8,44 +8,53 @@
 
 'use strict';
 
+var controller = require('../controller/handleIssues');
 var expect = require('chai').expect;
-var MongoClient = require('mongodb').MongoClient;
-var ObjectId = require('mongodb').ObjectID;
+
+// var MongoClient = require('mongodb').MongoClient;
+// var ObjectId = require('mongodb').ObjectID;
 
 // require('dotenv').config();
 
-const CONNECTION_STRING = process.env.DATABASE; //MongoClient.connect(CONNECTION_STRING, function(err, db) {}); 
+// const CONNECTION_STRING = process.env.DATABASE; //MongoClient.connect(CONNECTION_STRING, function(err, db) {});
 
-// app argument comes from server.js
+
 module.exports = function (app) {
-  MongoClient.connect(CONNECTION_STRING, function(err, db) {
-    if(err) {
-      console.log('Database error: ' + err)
-    } else {
-      console.log('Database success: ' + db)
-    }
-    app.route('/api/issues/:project')
-      .get(function (req, res){
-        var project = req.params.project;
-        // console.log(`GET project ${project}`);
-      })
-      
-      .post(function (req, res){
-        var project = req.body;
-        console.log(`POST project ${JSON.stringify(project)}`);
-      })
-      
-      .put(function (req, res){
-        var project = req.params.project;
-        
-      })
-      
-      .delete(function (req, res){
-        var project = req.params.project;
-        
-      });
-  })
+  // MongoClient.connect(process.env.DATABASE, function(err, db) {
+  //   if(err) {
+  //     console.log('Database error: ' + err)
+  //   } else {
+  //     apiRoutes(app, db);
+  //     //Start our server and tests!
+  //   }
+  // });
 
+
+
+    app.route('/api/issues/:project')
+        .get(controller.getIssues)
+        .post(controller.newIssue)
+      // .get(function (req, res){
+      //   var project = req.params.project;
+      //   console.log(`GET project ${project}`);
+      // })
+      
+    //   .post(function (req, res){
+    //     var project = req.body;
+    //     // console.log(`POST project ${JSON.stringify(project)}`);
+    //     console.log(`POST project ${req.db}`);
+
+    //   })
+      
+    //   .put(function (req, res){
+    //     var project = req.params.project;
+        
+    //   })
+      
+    //   .delete(function (req, res){
+    //     var project = req.params.project;
+        
+    //   });
     
 };
 
@@ -73,12 +82,5 @@ module.exports = function (app) {
   we will deleteIssue by listening to /api/issues/fcc?deleteIssue={issue id}
     - when user clicks 'delete issue' we will DELETE it by passing the id through the url, grab it in our controller, and pass the id to our model to delete 
     - user will see issue he/she clicked on removed from the list and a confirmation that the issue was deleted
-
-
-
-
-
-
-
-
 */
+
