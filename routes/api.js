@@ -34,6 +34,7 @@ module.exports = function (app) {
     app.route('/api/issues/:project')
         .get(controller.getIssues)
         .post(controller.newIssue)
+        .put(controller.updateIssue)
       // .get(function (req, res){
       //   var project = req.params.project;
       //   console.log(`GET project ${project}`);

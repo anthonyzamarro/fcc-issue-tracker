@@ -17,6 +17,7 @@
 		"express": "^4.14.0",
 		"helmet": "^3.1.0",
 		"mocha": "^3.2.0",
+		"moment": "^2.24.0",
 		"mongodb": "^2.2.16",
 		"mongoose": "^5.4.19",
 		"zombie": "^5.0.5"
@@ -35,6 +36,7 @@
 	],
 	"license": "MIT",
 	"devDependencies": {
+		"chai-dom": "^1.8.1",
 		"nodemon": "^1.18.10"
 	}
 }

@@ -8,6 +8,7 @@
 
 var chaiHttp = require('chai-http');
 var chai = require('chai');
+// const chaiDom = require('chaiDom');
 var assert = chai.assert;
 var server = require('../server');
 
@@ -29,14 +30,26 @@ suite('Functional Tests', function() {
         })
         .end(function(err, res){
           assert.equal(res.status, 200);
-          //fill me in too!
-          
+          const obj = res.body._doc;
+          const title = obj.title;
+          console.log(`res`, obj.title);
+          // assert.property({obj: {title: "Title"}}, "Title");
+          assert.notEqual(title, "");
           done();
         });
       });
       
       test('Required fields filled in', function(done) {
-        
+        // chai.request(server)
+        //     .post('/api/issues/fcc')
+        //     .send({
+        //       issue_title: 'Title 2',
+        //       issue_text: 'text 2',
+        //       created_by: 'author'
+        //     })
+        //     .end(function(err, res) => {
+        //       assert.
+        //     })
       });
       
       test('Missing required fields', function(done) {

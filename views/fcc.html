@@ -19,9 +19,9 @@
         <br>
         <h3>Submit a new issue:</h3>
         <form id="newIssue" method="post" action="/api/issues/fcc">
-          <input type="text" name="issue_title" placeholder="*Title" style="width: 320px; margin-bottom: 3px;" required=''><br>
-          <textarea type="text" name="issue_text" placeholder="*Text" style="width: 320px; height: 100px;" required=''></textarea><br>
-          <input type="text" name="created_by" placeholder="*Created by" style="width: 100px" required=''>
+          <input type="text" name="issue_title" placeholder="*Title" style="width: 320px; margin-bottom: 3px;"><br>
+          <textarea type="text" name="issue_text" placeholder="*Text" style="width: 320px; height: 100px;"></textarea><br>
+          <input type="text" name="created_by" placeholder="*Created by" style="width: 100px">
           <input type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px">
           <input type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
           <button type="submit">Submit Issue</button>
@@ -40,35 +40,35 @@
       $(function() {
         var currentProject = window.location.pathname.replace(/\//g, "");;
         var url = "/api/issues/"+currentProject;
-        $('#projectTitle').text('All issues for: '+currentProject)
-        $.ajax({
-          type: "GET",
-          url: url,
-          success: function(data)
-          {
-            var issues= [];
-            data.forEach(function(ele) {
-              var openstatus;
-              (ele.open) ? openstatus = 'open' : openstatus = 'closed';
-              var single = [
-                '<div class="issue '+openstatus+'">',
-                '<p class="id">id: '+ele._id+'</p>',
-                '<h3>'+ele.issue_title+' -  ('+openstatus+')</h3>',
-                '<br>',
-                '<p>'+ele.issue_text+'</p>',
-                '<p>'+ele.status_text+'</p>',
-                '<br>',
-                '<p class="id"><b>Created by:</b> '+ele.created_by+'  <b>Assigned to:</b> '+ele.assigned_to,
-                '<p class="id"><b>Created on:</b> '+ele.created_on+'  <b>Last updated:</b> '+ele.updated_on,
-                '<br><a href="#" class="closeIssue" id="'+ele._id+'">close?</a> <a href="#" class="deleteIssue" id="'+ele._id+'">delete?</a>',
-                '</div>'
+        // $('#projectTitle').text('All issues for: '+currentProject)
+        // $.ajax({
+        //   type: "GET",
+        //   url: url,
+        //   success: function(data)
+        //   {
+        //     var issues= [];
+        //     data.forEach(function(ele) {
+        //       var openstatus;
+        //       (ele.open) ? openstatus = 'open' : openstatus = 'closed';
+        //       var single = [
+        //         '<div class="issue '+openstatus+'">',
+        //         '<p class="id">id: '+ele._id+'</p>',
+        //         '<h3>'+ele.issue_title+' -  ('+openstatus+')</h3>',
+        //         '<br>',
+        //         '<p>'+ele.issue_text+'</p>',
+        //         '<p>'+ele.status_text+'</p>',
+        //         '<br>',
+        //         '<p class="id"><b>Created by:</b> '+ele.created_by+'  <b>Assigned to:</b> '+ele.assigned_to,
+        //         '<p class="id"><b>Created on:</b> '+ele.created_on+'  <b>Last updated:</b> '+ele.updated_on,
+        //         '<br><a href="#" class="closeIssue" id="'+ele._id+'">close?</a> <a href="#" class="deleteIssue" id="'+ele._id+'">delete?</a>',
+        //         '</div>'
                 
-              ];
-              issues.push(single.join(''));
-            });
-            $('#issueDisplay').html(issues.join(''));
-          }
-        });
+        //       ];
+        //       issues.push(single.join(''));
+        //     });
+        //     $('#issueDisplay').html(issues.join(''));
+        //   }
+        // });
         
         $('#newIssue').submit(function(e){
           e.preventDefault();
@@ -78,8 +78,20 @@
             url: url,
             data: $(this).serialize(),
             success: function(data) {
-              console.log(data);
-              window.location.reload(true); 
+              // console.log('data in VIEW!!!', data);
+              // window.location.reload(true); 
+              const formatNewIssue = '<h1>' + data._doc.title + '</h1>';
+              $('#issueDisplay').html(formatNewIssue);
+            },
+            error: (data) => {
+              const jsonParsed = JSON.parse(data.responseText);
+              $('#issueDisplay').html('');
+              $('#issueDisplay').prepend('<h1>Status '+data.status+ ' ' + data.statusText+'</h1>')
+              for(let i in jsonParsed.errors) {
+                $('#issueDisplay').append(
+                  '<h2>'+jsonParsed.errors[i].message+'</h2>'
+                );
+              }
             }
           });
         });

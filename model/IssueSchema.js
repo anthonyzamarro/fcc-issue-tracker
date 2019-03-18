@@ -6,9 +6,18 @@ mongoose.connect(process.env.DATABASE, { useNewUrlParser: true })
 const Schema = mongoose.Schema;
 
 const issueSchema = new Schema({
-    title:  String,
-    text: String,
-    author: String,
+    title:  {
+    	type: String,
+    	required: true
+    },
+    text: {
+    	type: String,
+    	required: true
+    },
+    author: {
+    	type: String,
+    	required: true
+    },
     assignee: String,
     statusText: String,
     createdOn: Date,
