@@ -1,26 +1,54 @@
-const Issue = require('./IssueSchema');
+const {Issue, Project} = require('./Schema');
 const moment = require('moment');
 
-const createIssue = (issue, cb) => {
-	console.log(`Issue createIssue issue`, issue.body)
-	const newIssue = new Issue({
-		title: issue.body.issue_title,
-		text: issue.body.issue_text,
-		author: issue.body.created_by,
-		assignee: issue.body.assigned_to,
-		statusText: issue.body.status_text,
-		createdOn: new Date(),
-		updatedOn: null,
-		open: false
+const createProject = (project, cb) => {
+	// console.log(`Issue.js createProject`, project.body)
+	const newProject = new Project({
+		title: project.body.project_title
 	})
-	newIssue.save((err) => {
+	newProject.save((err) => {
 		if (err) {
 			cb(err, 400)
 		} else {
-			const response = { ...newIssue, "id": newIssue._id }
+			const response = {...newProject, "id": newProject._id}
 			cb(response, 200)
 		}
 	})
+}
+
+const createIssue = (issue, cb) => {
+	// console.log(`Issue createIssue issue`, issue)
+	const issueInfo = issue.body.issueInfo;
+	const projectId = issue.body.projectId;
+
+	Project.findById(projectId, (err, doc) => {
+		if (err) {
+			console.log('Issue.js createIssue Project.findById err', error);
+		}
+		const newIssue = new Issue({
+			title: issueInfo.issue_title,
+			text: issueInfo.issue_text,
+			author: issueInfo.created_by,
+			assignee: issueInfo.assigned_to,
+			statusText: issueInfo.status_text,
+			createdOn: new Date(),
+			updatedOn: null,
+			open: false
+		})
+
+		console.log(newIssue);
+		newIssue.save((err) => {
+			if (err) {
+				cb(err, 400)
+			} else {
+				const response = { ...newIssue, "id": newIssue._id }
+				cb(response, 200)
+			}
+		})
+		doc.issues.push(newIssue);
+		// console.log('Issue.js createIssue Project.findById success', doc);
+	})
+
 }
 
 
@@ -39,6 +67,6 @@ const updateIssue = (issue, cb) => {
 
 module.exports = {
 	createIssue,
-  updateIssue
-
+  	updateIssue,
+  	createProject
 }

@@ -77,8 +77,8 @@
       $(function() {
         var currentProject = window.location.pathname.replace(/\//g, "");
         var url = "/api/issues/"+currentProject;
-        console.log('url', url);
         $('#projectTitle').text('All issues for: '+currentProject)
+
         $.ajax({
           type: "GET",
           url: url,
@@ -115,7 +115,7 @@
           $.ajax({
             type: "POST",
             url: url,
-            data: $(this).serialize(),
+            data: {"projectId": currentProject, "issueInfo": $(this).serialize()},
             success: function(data) {
               const assignee = data._doc.assignee == '' ? 'no one' : data._doc.assignee;
               const updated = data._doc.updatedOn == null ? 'not updated' : data._doc.updatedOn
@@ -127,8 +127,7 @@
                   <p>assigned to: ${assignee}</p>
                   <p><input type="checkbox" id="issueCheckbox"/> status: ${openStatus}</p>
                   <small>Created by: ${data._doc.author} / created: ${data._doc.createdOn} / updated: ${updated} / issue ID: ${data.id}</small>
-                </div>  
-              `;
+                </div>`;
               $('#issueDisplay').html(formatNewIssue);
             },
             error: (data) => {
@@ -187,6 +186,7 @@
             data: $('#testForm2').serialize(),
             success: function(data) {
               $('#jsonResult').text(JSON.stringify(data));
+
             }
           });
           e.preventDefault();

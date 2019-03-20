@@ -36,44 +36,16 @@
       <h2><a href="/apitest/">EXAMPLE: Go to <i>/apitest/</i> project issues</a></h2>
     </div>
     <hr style="margin: 50px">
-    <form id="add-project">
+    <form id="add-project" method="post" action="/">
       <h2>
         Create a new Project
       </h2>
-      <input type="text" placeholder="add project" />
+      <input type="text" name="project_title" placeholder="add project" id="new-project"/>
       <button type="submit">
         Create Project
       </button>
+      <div class="new-project-container" id="jsonData"></div>
     </form>
-<!--     <div id='testui' style='margin-left: 5%'>
-      <h2 style="text-align: left">API Tests:</h2>
-      <h3>Submit issue on <i>apitest</i></h3>
-      <form id="testForm" class="border">
-        <input type="text" name="issue_title" placeholder="*Title" style="width: 100px" required=''><br>
-        <textarea type="text" name="issue_text" placeholder="*Text" style="width: 100px" required=''></textarea><br>
-        <input type="text" name="created_by" placeholder="*Created by" style="width: 100px" required=''><br>
-        <input type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px"><br>
-        <input type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
-        <button type="submit">Submit Issue</button>
-      </form><br>
-      <h3>Update issue on <i>apitest</i> (Change any or all to update issue on the _id supplied)</h3>
-      <form id="testForm2" class="border">
-        <input type="text" name="_id" placeholder="*_id" style="width: 100px" required=''><br>
-        <input type="text" name="issue_title" placeholder="(opt)Title" style="width: 100px"><br>
-        <textarea type="text" name="issue_text" placeholder="(opt)Text" style="width: 100px"></textarea><br>
-        <input type="text" name="created_by" placeholder="(opt)Created by" style="width: 100px"><br>
-        <input type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px"><br>
-        <input type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
-        <label><input type="checkbox" name="open" value=false> Check to close issue</label><br>
-        <button type="submit">Submit Issue</button>
-      </form><br>
-      <h3>Delete issue on <i>apitest</i></h3>
-      <form id="testForm2" class="border">
-        <input type="text" name="_id" placeholder="_id" style="width: 100px" required=''><br>
-        <button type="submit">Delete Issue</button>
-      </form>
-      <code id='jsonResult'></code>
-    </div> -->
     <hr style="margin: 50px; margin-top: 200px">
     <!-- Your web-app is https, so your scripts need to be too -->
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"
@@ -83,12 +55,18 @@
       $(function() {
         
         $('#add-project').submit((e) => {
+          e.preventDefault();
           $.ajax({
             url: '/',
             type: 'post',
-            data: $('#add-project').serialize(),
-            success: (data) =>{
-              console.log('project created successfully!', data);
+            data: $('#new-project').serialize(),
+            success: (data) => {
+              const sluggedTitle = data._doc.title
+                                        .toLowerCase()
+                                        .replace(/[^\w ]+/g,'')
+                                        .replace(/ +/g,'-');
+              // $('#jsonData').html('<div>Project successfully created! visit it here:</div><a href="'+sluggedTitle+'-'+data._doc._id+'">'+data._doc.title+'</a>')
+              $('#jsonData').html('<div>Project successfully created! visit it here:</div><a href="'+data._doc._id+'">'+data._doc.title+'</a>')
             }
           });
         });
