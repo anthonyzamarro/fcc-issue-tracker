@@ -31,29 +31,54 @@ suite('Functional Tests', function() {
         .end(function(err, res){
           assert.equal(res.status, 200);
           const obj = res.body._doc;
-          const title = obj.title;
-          console.log(`res`, obj.title);
-          // assert.property({obj: {title: "Title"}}, "Title");
-          assert.notEqual(title, "");
+          const { title, text, author, assignee, statusText } = obj;
+          assert.equal(title, "Title");
+          assert.equal(text, "text");
+          assert.notEqual(author, "");
+          assert.notEqual(assignee, "");
+          assert.notEqual(statusText, "");
           done();
         });
       });
       
       test('Required fields filled in', function(done) {
-        // chai.request(server)
-        //     .post('/api/issues/fcc')
-        //     .send({
-        //       issue_title: 'Title 2',
-        //       issue_text: 'text 2',
-        //       created_by: 'author'
-        //     })
-        //     .end(function(err, res) => {
-        //       assert.
-        //     })
+        chai.request(server)
+          .post('/api/issues/fcc')
+          .send({
+            issue_title: 'Title',
+            assigned_to: 'Chai and Mocha',
+            status_text: 'In QA'
+          })
+          .end((err, res) => {
+            assert.equal(res.status, 200);
+            console.log('required fields', res);
+            const obj = res.body._doc;
+            const { title, text, author } = obj;
+            assert.notEqual(title, "");
+            assert.notEqual(text, "");
+            assert.notEqual(author, "");
+            done();
+          })
       });
       
       test('Missing required fields', function(done) {
-        
+        chai.request(server)
+          .post('/api/issues/fcc')
+          .send({
+            assigned_to: 'Chai and Mocha',
+            status_text: 'In QA'
+          })
+          .end((err, res) => {
+            assert.equal(res.status, 200);
+            console.log('missing fields', res)
+            const obj = res.body._doc;
+            const { title, text, author } = obj;
+            assert.equal(title, "");
+            assert.equal(text, "");
+            assert.equal(author, "");
+            // console.log('obj', obj)
+            done();
+          })
       });
       
     });
