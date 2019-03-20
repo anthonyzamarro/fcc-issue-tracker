@@ -2,7 +2,7 @@ const Issue = require('./IssueSchema');
 const moment = require('moment');
 
 const createIssue = (issue, cb) => {
-	// console.log(`Issue createIssue issue`, issue.body)
+	console.log(`Issue createIssue issue`, issue.body)
 	const newIssue = new Issue({
 		title: issue.body.issue_title,
 		text: issue.body.issue_text,
@@ -23,6 +23,22 @@ const createIssue = (issue, cb) => {
 	})
 }
 
+
+const updateIssue = (issue, cb) => {
+  console.log(`Issue updateIssue:`, issue.body);
+//   Issue.findById(issue.body._id, (err, doc) => {
+//     if (err) console.log(`ISSUE updateIssue error`, err);
+//     doc.title = issue.body.issue_title,
+//     doc.updatedOn = new Date()
+    
+//   })
+  Issue.findByIdAndUpdate(issue.body._id, {title: issue.body.issue_title, updatedOn: new Date()}, (err, doc) => {
+    console.log(doc)
+  })
+}
+
 module.exports = {
-	createIssue
+	createIssue,
+  updateIssue
+
 }

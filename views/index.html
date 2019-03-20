@@ -14,7 +14,7 @@
         ISQA_4 - Issue Tracker
       </h1>
     </header>
-    <div id='userstories' style='margin-left: 5%; margin-top: 5%'>
+    <div id="userstories" style="margin-left: 5%; margin-top: 5%">
       <h3>User Stories</h3>
       <ol>
         <li>Prevent cross site scripting(XSS attack).</li>
@@ -33,10 +33,19 @@
       <h3>Example return:</h3>
       <code>[{"_id":"5871dda29faedc3491ff93bb","issue_title":"Fix error in posting data","issue_text":"When we post data it has an error.","created_on":"2017-01-08T06:35:14.240Z","updated_on":"2017-01-08T06:35:14.240Z","created_by":"Joe","assigned_to":"Joe","open":true,"status_text":"In QA"},...]</code>
       <br><br>
-      <h2><a href='/apitest/'>EXAMPLE: Go to <i>/apitest/</i> project issues</a></h2>
+      <h2><a href="/apitest/">EXAMPLE: Go to <i>/apitest/</i> project issues</a></h2>
     </div>
-    <hr style='margin: 50px'>
-    <div id='testui' style='margin-left: 5%'>
+    <hr style="margin: 50px">
+    <form id="add-project">
+      <h2>
+        Create a new Project
+      </h2>
+      <input type="text" placeholder="add project" />
+      <button type="submit">
+        Create Project
+      </button>
+    </form>
+<!--     <div id='testui' style='margin-left: 5%'>
       <h2 style="text-align: left">API Tests:</h2>
       <h3>Submit issue on <i>apitest</i></h3>
       <form id="testForm" class="border">
@@ -64,47 +73,58 @@
         <button type="submit">Delete Issue</button>
       </form>
       <code id='jsonResult'></code>
-    </div>
-    <hr style='margin: 50px; margin-top: 200px'>
+    </div> -->
+    <hr style="margin: 50px; margin-top: 200px">
     <!-- Your web-app is https, so your scripts need to be too -->
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"
             integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
             crossorigin="anonymous"></script>
     <script>
       $(function() {
-        $('#testForm').submit(function(e) {
+        
+        $('#add-project').submit((e) => {
           $.ajax({
-            url: '/api/issues/apitest',
+            url: '/',
             type: 'post',
-            data: $('#testForm').serialize(),
-            success: function(data) {
-              $('#jsonResult').text(JSON.stringify(data));
+            data: $('#add-project').serialize(),
+            success: (data) =>{
+              console.log('project created successfully!', data);
             }
           });
-          e.preventDefault();
         });
-        $('#testForm2').submit(function(e) {
-          $.ajax({
-            url: '/api/issues/apitest',
-            type: 'put',
-            data: $('#testForm2').serialize(),
-            success: function(data) {
-              $('#jsonResult').text(JSON.stringify(data));
-            }
-          });
-          e.preventDefault();
-        });
-        $('#testForm3').submit(function(e) {
-          $.ajax({
-            url: '/api/issues/apitest',
-            type: 'delete',
-            data: $('#testForm3').serialize(),
-            success: function(data) {
-              $('#jsonResult').text(JSON.stringify(data));
-            }
-          });
-          e.preventDefault();
-        });
+        // $('#testForm').submit(function(e) {
+        //   $.ajax({
+        //     url: '/api/issues/fcc',
+        //     type: 'post',
+        //     data: $('#testForm').serialize(),
+        //     success: function(data) {
+        //       $('#jsonResult').text(JSON.stringify(data));
+        //     }
+        //   });
+        //   e.preventDefault();
+        // });
+        // $('#testForm2').submit(function(e) {
+        //   $.ajax({
+        //     url: '/api/issues/fcc',
+        //     type: 'put',
+        //     data: $('#testForm2').serialize(),
+        //     success: function(data) {
+        //       $('#jsonResult').text(JSON.stringify(data));
+        //     }
+        //   });
+        //   e.preventDefault();
+        // });
+        // $('#testForm3').submit(function(e) {
+        //   $.ajax({
+        //     url: '/api/issues/fcc',
+        //     type: 'delete',
+        //     data: $('#testForm3').serialize(),
+        //     success: function(data) {
+        //       $('#jsonResult').text(JSON.stringify(data));
+        //     }
+        //   });
+        //   e.preventDefault();
+        // });
       });
    </script>
   </body>

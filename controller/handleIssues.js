@@ -7,25 +7,22 @@ module.exports = {
 		// console.log(`GET handleIssues Issue`, Issue)
 	},
 
-	newIssue: (req, res, next) => {
-		// console.log(`POST handleIssues req`, req.body)
-		// const { issue } = req.body.issue_title;
+	newIssue: (req, res) => {
 		Issue.createIssue(req, (dbRes, code) => {
-			// res.sendStatus(code);
-			// console.log(`NEWISSUE dbRes`, dbRes)
 			switch(code) {
 				case 400:
 					return res.status(code).send(dbRes);
 				case 200:
 					return res.status(code).send(dbRes);
 			}
-			
-			// console.log(`dbRes`, dbRes, `code ${code}`)
-		})
+		});
 	},
 
 	updateIssue: (req, res) => {
-
+    // console.log(`handleIssues updateIssue`, req.body);
+    Issue.updateIssue(req, (dbRes, code) => {
+      
+    });
 	}
 
 }

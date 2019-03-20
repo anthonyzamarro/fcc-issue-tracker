@@ -25,6 +25,18 @@ const issueSchema = new Schema({
     open: Boolean
   });
 
+const projectSchema = new Schema ({
+  title: {
+    type: String,
+    required: true
+  },
+  issues: [issueSchema]
+})
+
+
 const Issue = mongoose.model('Issue', issueSchema);
 
-module.exports = Issue;
+const Project = mongoose.model('Project', projectSchema);
+
+module.exports = {Issue, Project};
+

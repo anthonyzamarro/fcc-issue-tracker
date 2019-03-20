@@ -11,30 +11,18 @@
 var controller = require('../controller/handleIssues');
 var expect = require('chai').expect;
 
-// var MongoClient = require('mongodb').MongoClient;
-// var ObjectId = require('mongodb').ObjectID;
-
-// require('dotenv').config();
-
-// const CONNECTION_STRING = process.env.DATABASE; //MongoClient.connect(CONNECTION_STRING, function(err, db) {});
-
-
 module.exports = function (app) {
-  // MongoClient.connect(process.env.DATABASE, function(err, db) {
-  //   if(err) {
-  //     console.log('Database error: ' + err)
-  //   } else {
-  //     apiRoutes(app, db);
-  //     //Start our server and tests!
-  //   }
-  // });
-
-
-
+    app.route('/')
+        .post((req, res) => {
+          console.log('/ home in api.js', req);
+        })
+  
     app.route('/api/issues/:project')
         .get(controller.getIssues)
         .post(controller.newIssue)
         .put(controller.updateIssue)
+  
+    // app.route('/api/issues/:project?_id')
       // .get(function (req, res){
       //   var project = req.params.project;
       //   console.log(`GET project ${project}`);
@@ -47,10 +35,13 @@ module.exports = function (app) {
 
     //   })
       
-    //   .put(function (req, res){
-    //     var project = req.params.project;
+//       .put(function (req, res){
+//         var project = req;
+      
+//         console.log('PUT in api.js', project);
         
-    //   })
+//       })
+
       
     //   .delete(function (req, res){
     //     var project = req.params.project;
