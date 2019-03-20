@@ -23,6 +23,7 @@ const createIssue = (issue, cb) => {
 	})
 }
 
+
 const updateIssue = (issue, cb) => {
   console.log(`Issue updateIssue:`, issue.body);
 //   Issue.findById(issue.body._id, (err, doc) => {
@@ -39,4 +40,5 @@ const updateIssue = (issue, cb) => {
 module.exports = {
 	createIssue,
   updateIssue
+
 }

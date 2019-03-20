@@ -25,7 +25,6 @@ const issueSchema = new Schema({
     open: Boolean
   });
 
-
 const projectSchema = new Schema ({
   title: {
     type: String,
@@ -40,3 +39,4 @@ const Issue = mongoose.model('Issue', issueSchema);
 const Project = mongoose.model('Project', projectSchema);
 
 module.exports = {Issue, Project};
+

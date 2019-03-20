@@ -23,7 +23,6 @@ module.exports = function (app) {
         .put(controller.updateIssue)
   
     // app.route('/api/issues/:project?_id')
-    
       // .get(function (req, res){
       //   var project = req.params.project;
       //   console.log(`GET project ${project}`);
@@ -42,6 +41,7 @@ module.exports = function (app) {
 //         console.log('PUT in api.js', project);
         
 //       })
+
       
     //   .delete(function (req, res){
     //     var project = req.params.project;
