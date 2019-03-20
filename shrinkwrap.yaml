@@ -7,10 +7,12 @@ dependencies:
   express: 4.16.4
   helmet: 3.16.0
   mocha: 3.5.3
+  moment: 2.24.0
   mongodb: 2.2.36
   mongoose: 5.4.19
   zombie: 5.0.8
 devDependencies:
+  chai-dom: 1.8.1
   nodemon: 1.18.10
 packages:
   /abab/1.0.4:
@@ -321,6 +323,12 @@ packages:
     dev: false
     resolution:
       integrity: sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
+  /chai-dom/1.8.1:
+    dev: true
+    engines:
+      node: '>= 0.12.0'
+    resolution:
+      integrity: sha512-ysWinPU3fc+Bp+xMn/u2/PQyk65jnnCZl0alWupUuFFMGaG+KxrUnsoYOgjMDhSKPkm3WqE/5RTnOowIb7asMg==
   /chai-http/3.0.0:
     dependencies:
       cookiejar: 2.0.6
@@ -1785,6 +1793,10 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-/6na001MJWEtYxHOV1WLfsmR4YIynkUEhBwzsb+fk2qmQ3iqsi258l/Q2MWHJMImAcNpZ8DEdYAK72NHoIQ9Eg==
+  /moment/2.24.0:
+    dev: false
+    resolution:
+      integrity: sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
   /mongodb-core/2.1.20:
     dependencies:
       bson: 1.0.9
@@ -2976,12 +2988,14 @@ shrinkwrapVersion: 3
 specifiers:
   body-parser: ^1.15.2
   chai: ^3.5.0
+  chai-dom: ^1.8.1
   chai-http: ^3.0.0
   cors: ^2.8.1
   dotenv: ^7.0.0
   express: ^4.14.0
   helmet: ^3.1.0
   mocha: ^3.2.0
+  moment: ^2.24.0
   mongodb: ^2.2.16
   mongoose: ^5.4.19
   nodemon: ^1.18.10

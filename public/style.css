@@ -21,3 +21,13 @@ body {
 .id {
   font-size: 10.5px;
 }
+
+center {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.issue-container {
+  flex: 1;
+}
