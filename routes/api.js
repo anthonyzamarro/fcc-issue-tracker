@@ -20,6 +20,7 @@ module.exports = function (app) {
         .get(controller.getIssues)
         .post(controller.newIssue)
         .put(controller.updateIssue)
+        .delete(controller.deleteIssue)
   
     // app.route('/api/issues/:project?_id')
       // .get(function (req, res){
