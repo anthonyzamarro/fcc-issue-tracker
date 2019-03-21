@@ -26,6 +26,16 @@ const createProject = (project, cb) => {
 	})
 }
 
+const getIssues = (projectId, cb) => {
+  Project.findById(projectId, (err, doc) => {
+    if(err) {
+      cb(err, 400);
+    } else {
+      cb(doc.issues, 200);
+    }
+  });
+}
+
 const createIssue = (issue, cb) => {
 	const projectId = issue.params.project;
 
@@ -42,7 +52,7 @@ const createIssue = (issue, cb) => {
 			statusText: issue.body.status_text,
 			createdOn: new Date(),
 			updatedOn: null,
-			open: false
+			open: true
 		})
 		doc.issues.push(newIssue);
     doc.markModified('issues');
@@ -70,43 +80,23 @@ const updateIssue = (issue, cb) => {
   Project.findById(projectId, (err, doc) => {
     if(err) {
       console.log('Issue.js updateIssue error', err);
-      cb('Could not updated' + issueId, 400);
+      cb('Could not update ' + issueId, 400);
     } else {
-
-
-    	let filteredIssue = doc.issues.filter(is => {
-	        if (is._id == issueId) {
-	        	return is;
-	          // console.log(is, issue.body)
-	          // is.title = issue.body.issue_title == '' ? is.title : issue.body.issue_title;
-	          // is.text = issue.body.issue_text == '' ? is.text : issue.body.issue_text;
-	          // is.author = issue.body.created_by == '' ? is.author : issue.body.created_by;
-	          // is.assignee = issue.body.assigned_to == '' ? is.assignee : issue.body.assigned_to;
-	          // is.statusText = issue.body.status_text == '' ? is.statusText : issue.body.status_text;
-	          // is.updatedOn = new Date();
-	        }
-	      });
-
+    	let filteredIssue = doc.issues.filter(is => {if (is._id == issueId) return is});
     	let ourIssue = filteredIssue[0];
     	if (empty) {
-			ourIssue.updatedOn = moment().format('YYYY-MM-DD hh:mm a');
-			console.log(ourIssue);
+  			ourIssue.updatedOn = moment().format('YYYY-MM-DD hh:mm a');
     		doc.markModified('issues');
-	      	doc.save();
+	      doc.save();
     		cb('no updated field sent', 200);
     	} else {
-	      // doc.issues.forEach(is => {
-	        // if (is._id == issueId) {
-	          // console.log(is, issue.body)
-	          // is.title = issue.body.issue_title == '' ? is.title : issue.body.issue_title;
-	          // is.text = issue.body.issue_text == '' ? is.text : issue.body.issue_text;
-	          // is.author = issue.body.created_by == '' ? is.author : issue.body.created_by;
-	          // is.assignee = issue.body.assigned_to == '' ? is.assignee : issue.body.assigned_to;
-	          // is.statusText = issue.body.status_text == '' ? is.statusText : issue.body.status_text;
-	          // is.updatedOn = new Date();
-	        // }
-	      // });
 	      ourIssue.title = issue.body.issue_title == '' ? ourIssue.title : issue.body.issue_title;
+        ourIssue.text = issue.body.issue_text == '' ? ourIssue.text : issue.body.issue_text;
+        ourIssue.author = issue.body.created_by == '' ? ourIssue.author : issue.body.created_by;
+        ourIssue.assignee = issue.body.assigned_to == '' ? ourIssue.assignee : issue.body.assigned_to;
+        ourIssue.statusText = issue.body.status_text == '' ? ourIssue.statusText : issue.body.status_text;
+        ourIssue.open = issue.body.open == 'on' ? ourIssue.open = false : issue.body.open = true;
+        ourIssue.updatedOn = moment().format('YYYY-MM-DD hh:mm a');
 	      doc.markModified('issues');
 	      doc.save();
 	      cb('successfully updated', 200);
@@ -116,9 +106,28 @@ const updateIssue = (issue, cb) => {
   })
 }
 
+const deleteIssue = (issue, cb) => {
+  const projectId = issue.params.project;
+  const issueId = issue.body._id;
+  Project.findById(projectId, (err, doc) => {
+    if(err) cb(err, 400);
+    
+    let filteredIssues = doc.issues.filter((i, index) => {
+        if (i._id != issueId) {
+          return i;
+        }
+      });
+    doc.issues = filteredIssues;
+    doc.markModified('issues');
+    doc.save();
+  });
+}
+
 module.exports = {
   getAllProjects,
   createProject,
+  getIssues,
   createIssue,
-  updateIssue
+  updateIssue,
+  deleteIssue
 }

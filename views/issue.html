@@ -39,7 +39,7 @@
       <hr style='margin: 50px'>
       <div id='testui' style='margin-left: 5%'>
         <h2 style="text-align: left">API Tests:</h2>
-        <h3>Submit issue on <i>apitest</i></h3>
+<!--         <h3>Submit issue on <i>apitest</i></h3>
         <form id="testForm" class="border">
           <input type="text" name="issue_title" placeholder="*Title" style="width: 100px" required=''><br>
           <textarea type="text" name="issue_text" placeholder="*Text" style="width: 100px" required=''></textarea><br>
@@ -47,7 +47,7 @@
           <input type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px"><br>
           <input type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
           <button type="submit">Submit Issue</button>
-        </form><br>
+        </form><br> -->
         <h3>Update issue on <i>apitest</i> (Change any or all to update issue on the _id supplied)</h3>
         <form id="testForm2" class="border">
           <input type="text" name="_id" placeholder="*_id" style="width: 100px" required=''><br>
@@ -56,11 +56,11 @@
           <input type="text" name="created_by" placeholder="(opt)Created by" style="width: 100px"><br>
           <input type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px"><br>
           <input type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
-          <label><input type="checkbox" name="open" value=false> Check to close issue</label><br>
+          <label><input type="checkbox" name="open"> Check to close issue</label><br>
           <button type="submit">Submit Issue</button>
         </form><br>
         <h3>Delete issue on <i>apitest</i></h3>
-        <form id="testForm2" class="border">
+        <form id="testForm3" class="border">
           <input type="text" name="_id" placeholder="_id" style="width: 100px" required=''><br>
           <button type="submit">Delete Issue</button>
         </form>
@@ -86,22 +86,20 @@
           {
             var issues= [];
             data.forEach(function(ele) {
-              console.log(ele);
               var openstatus;
               (ele.open) ? openstatus = 'open' : openstatus = 'closed';
               var single = [
                 '<div class="issue '+openstatus+'">',
                 '<p class="id">id: '+ele._id+'</p>',
-                '<h3>'+ele.issue_title+' -  ('+openstatus+')</h3>',
+                '<h3>'+ele.title+' -  ('+openstatus+')</h3>',
                 '<br>',
-                '<p>'+ele.issue_text+'</p>',
-                '<p>'+ele.status_text+'</p>',
+                '<p>'+ele.text+'</p>',
+                '<p>'+ele.statusText+'</p>',
                 '<br>',
-                '<p class="id"><b>Created by:</b> '+ele.created_by+'  <b>Assigned to:</b> '+ele.assigned_to,
-                '<p class="id"><b>Created on:</b> '+ele.created_on+'  <b>Last updated:</b> '+ele.updated_on,
+                '<p class="id"><b>Created by:</b> '+ele.author+'  <b>Assigned to:</b> '+ele.assignee,
+                '<p class="id"><b>Created on:</b> '+ele.author+'  <b>Last updated:</b> '+ele.updatedOn,
                 '<br><a href="#" class="closeIssue" id="'+ele._id+'">close?</a> <a href="#" class="deleteIssue" id="'+ele._id+'">delete?</a>',
                 '</div>'
-                
               ];
               issues.push(single.join(''));
             });
@@ -115,7 +113,7 @@
           $.ajax({
             type: "POST",
             url: url,
-            data: {"projectId": currentProject, "issueInfo": $(this).serialize()},
+            data: $(this).serialize(),
             success: function(data) {
               const assignee = data._doc.assignee == '' ? 'no one' : data._doc.assignee;
               const updated = data._doc.updatedOn == null ? 'not updated' : data._doc.updatedOn
@@ -158,13 +156,16 @@
         });
         $('#issueDisplay').on('click','.deleteIssue', function(e) {
           var url = "/api/issues/"+currentProject;
+          e.preventDefault();
+          console.log(e);
           $.ajax({
             type: "DELETE",
             url: url,
             data: {_id: $(this).attr('id')},
-            success: function(data) { alert(data); window.location.reload(true); }
+            success: function(data) { 
+               console.log(data);
+            }
           });
-          e.preventDefault();
         });
         
         
@@ -193,16 +194,21 @@
           });
           e.preventDefault();
         });
+        
+        
+        
         $('#testForm3').submit(function(e) {
+          e.preventDefault();
+          console.log(e)
           $.ajax({
             url: url,
             type: 'delete',
             data: $('#testForm3').serialize(),
             success: function(data) {
+              console.log(data);
               $('#jsonResult').text(JSON.stringify(data));
             }
           });
-          e.preventDefault();
         });
         
         

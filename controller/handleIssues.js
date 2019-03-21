@@ -25,8 +25,10 @@ module.exports = {
 	},
 
 	getIssues: (req, res) => {
-		// console.log(`GET handleIssues req`, req.body)
-		// console.log(`GET handleIssues Issue`, Issue)
+		// console.log(`GET handleIssues req`, req.params.project)
+    Issue.getIssues(req.params.project, (dbRes, code) => {
+      return res.status(code).send(dbRes);
+    });
 	},
 
 	newIssue: (req, res) => {
@@ -37,8 +39,14 @@ module.exports = {
 
 	updateIssue: (req, res) => {
       Issue.updateIssue(req, (dbRes, code) => {
-        return res.status(code).send(dbRes)
+        return res.status(code).send(dbRes);
       });
-	}
+	},
+  
+  deleteIssue: (req, res) => {
+    Issue.deleteIssue(req, (dbRes, code) => {
+      return res.status(code).send(dbRes);
+    });
+  }
 
 }
