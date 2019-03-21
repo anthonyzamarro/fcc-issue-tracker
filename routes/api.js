@@ -12,7 +12,8 @@ var controller = require('../controller/handleIssues');
 var expect = require('chai').expect;
 
 module.exports = function (app) {
-    app.route('/')
+    app.route('/api/projects')
+        .get(controller.getProjects)
         .post(controller.createProject)
   
     app.route('/api/issues/:project')

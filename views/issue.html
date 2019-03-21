@@ -149,8 +149,10 @@
           $.ajax({
             type: "PUT",
             url: url,
-            data: {_id: $(this).attr('id'), open: false},
-            success: function(data) { alert(data); window.location.reload(true); }
+            data: {_id: currentProject, open: false},
+            success: function(data) { 
+              console.log('issue.html PUT request', data);
+            }
           });
           e.preventDefault();
         });

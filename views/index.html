@@ -44,6 +44,11 @@
       <button type="submit">
         Create Project
       </button>
+      <div class="projects-list-container">
+        <ul id="project-list">
+          
+        </ul>
+      </div>
       <div class="new-project-container" id="jsonData"></div>
     </form>
     <hr style="margin: 50px; margin-top: 200px">
@@ -54,10 +59,25 @@
     <script>
       $(function() {
         
+          $.ajax({
+            url: '/api/projects',
+            type: 'get',
+            data: 'json',
+            success: (data) => {
+              data.forEach(project => {
+                // console.log(project)
+                $('#project-list').append('<li><a href="'+project._id+'">'+ project.title +'</a></li>')
+              });
+            },
+            error: (data) => {
+              console.log('GET error in index.html', data)
+            }
+          });
+        
         $('#add-project').submit((e) => {
           e.preventDefault();
           $.ajax({
-            url: '/',
+            url: '/api/projects',
             type: 'post',
             data: $('#new-project').serialize(),
             success: (data) => {
@@ -67,6 +87,7 @@
                                         .replace(/ +/g,'-');
               // $('#jsonData').html('<div>Project successfully created! visit it here:</div><a href="'+sluggedTitle+'-'+data._doc._id+'">'+data._doc.title+'</a>')
               $('#jsonData').html('<div>Project successfully created! visit it here:</div><a href="'+data._doc._id+'">'+data._doc.title+'</a>')
+              $('#project-list').append('<li>'+ data._doc.title +'</li>')
             }
           });
         });
