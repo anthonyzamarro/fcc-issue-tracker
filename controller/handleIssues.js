@@ -17,6 +17,13 @@ module.exports = {
 		})
 	},
 
+	createProject: (req, res) => {
+		Issue.createProject(req, (dbres, code) => {
+			// console.log('handleIssues.js createProject dbres, code', dbres, code)
+			res.status(code).send(dbres)
+		})
+	},
+
 	getIssues: (req, res) => {
 		// console.log(`GET handleIssues req`, req.body)
 		// console.log(`GET handleIssues Issue`, Issue)

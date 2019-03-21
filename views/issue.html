@@ -115,7 +115,7 @@
           $.ajax({
             type: "POST",
             url: url,
-            data: $(this).serialize(),
+            data: {"projectId": currentProject, "issueInfo": $(this).serialize()},
             success: function(data) {
               const assignee = data._doc.assignee == '' ? 'no one' : data._doc.assignee;
               const updated = data._doc.updatedOn == null ? 'not updated' : data._doc.updatedOn
@@ -188,6 +188,7 @@
             data: $('#testForm2').serialize(),
             success: function(data) {
               $('#jsonResult').text(JSON.stringify(data));
+
             }
           });
           e.preventDefault();
