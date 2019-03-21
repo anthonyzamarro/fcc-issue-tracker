@@ -12,10 +12,9 @@ var controller = require('../controller/handleIssues');
 var expect = require('chai').expect;
 
 module.exports = function (app) {
-    app.route('/')
-        .post((req, res) => {
-          console.log('/ home in api.js', req);
-        })
+    app.route('/api/projects')
+        .get(controller.getProjects)
+        .post(controller.createProject)
   
     app.route('/api/issues/:project')
         .get(controller.getIssues)

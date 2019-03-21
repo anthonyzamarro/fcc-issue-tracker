@@ -77,8 +77,8 @@
       $(function() {
         var currentProject = window.location.pathname.replace(/\//g, "");
         var url = "/api/issues/"+currentProject;
-        console.log('url', url);
         $('#projectTitle').text('All issues for: '+currentProject)
+
         $.ajax({
           type: "GET",
           url: url,
@@ -127,8 +127,7 @@
                   <p>assigned to: ${assignee}</p>
                   <p><input type="checkbox" id="issueCheckbox"/> status: ${openStatus}</p>
                   <small>Created by: ${data._doc.author} / created: ${data._doc.createdOn} / updated: ${updated} / issue ID: ${data.id}</small>
-                </div>  
-              `;
+                </div>`;
               $('#issueDisplay').html(formatNewIssue);
             },
             error: (data) => {
@@ -150,8 +149,10 @@
           $.ajax({
             type: "PUT",
             url: url,
-            data: {_id: $(this).attr('id'), open: false},
-            success: function(data) { alert(data); window.location.reload(true); }
+            data: {_id: currentProject, open: false},
+            success: function(data) { 
+              console.log('issue.html PUT request', data);
+            }
           });
           e.preventDefault();
         });
