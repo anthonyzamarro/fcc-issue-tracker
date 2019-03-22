@@ -19,16 +19,14 @@ module.exports = {
 
 	createProject: (req, res) => {
 		Issue.createProject(req, (dbres, code) => {
-			// console.log('handleIssues.js createProject dbres, code', dbres, code)
-			res.status(code).send(dbres)
-		})
+			return res.status(code).send(dbres)
+		});
 	},
 
 	getIssues: (req, res) => {
-		// console.log(`GET handleIssues req`, req.params.project)
-    Issue.getIssues(req.params.project, (dbRes, code) => {
-      return res.status(code).send(dbRes);
-    });
+	    Issue.getIssues(req.params.project, (dbRes, code) => {
+	      return res.status(code).send(dbRes);
+	    });
 	},
 
 	newIssue: (req, res) => {
