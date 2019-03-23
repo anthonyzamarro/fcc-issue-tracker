@@ -24,11 +24,18 @@ module.exports = {
 	},
 
 	getIssues: (req, res) => {
+    // console.log(req)
 	    Issue.getIssues(req.params.project, (dbRes, code) => {
 	      return res.status(code).send(dbRes);
 	    });
 	},
-
+  
+  filterIssues: (req, res) => {
+    console.log('made it to controller');
+    Issue.filterIssues(req, (dbRes, code) => {
+    });
+  },
+  
 	newIssue: (req, res) => {
 		Issue.createIssue(req, (dbRes, code) => {
       return res.status(code).send(dbRes);

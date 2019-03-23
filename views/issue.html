@@ -44,6 +44,22 @@
       </div>
       
       <hr style='margin: 50px; margin-top: 200px'>
+      <div class="filters">
+          <h3>
+            Filter Issues
+          </h3>
+        <form id="filter-form" method="post">
+          <div class="filter-title">
+            <label>Title</label>
+            <input type="text" id="filter-title" name="title"/>
+          </div>
+          <div class="filter-open">
+            <label>Open</label>
+            <input type="checkbox" id="filter-open" name="open"/>
+          </div>
+          <button type="submit" id="filter-submit">Filter</button>
+        </form>
+        </div>
       <div id='issueDisplay'></div>
     </center>
     
@@ -55,7 +71,7 @@
         var currentProject = window.location.pathname.replace(/\//g, "");
         var url = "/api/issues/"+currentProject;
         var issues = [];
-        $('#projectTitle').text('All issues for: '+currentProject)
+        $('#projectTitle').text('All issues for: '+currentProject);
         $.ajax({
           type: "GET",
           url: url,
@@ -82,6 +98,20 @@
             $('#issueDisplay').html(issues.join(''));
           }
         });
+        
+        
+          
+        $('#filter-form').submit(function(e) {
+          e.preventDefault();
+          $.ajax({
+            url: url + '/filters',
+            type: 'post',
+            data: $(this).serialize(),
+            success: function(data) {
+              console.log('#filter-form',data);
+            }
+          });
+        })
         
         $('#newIssue').submit(function(e){
           e.preventDefault();
@@ -114,8 +144,7 @@
               }
             }
           });
-        });
-        
+        });    
         
         $('#issueDisplay').on('click','.closeIssue', function(e) {
           var url = "/api/issues/"+currentProject;
@@ -197,25 +226,6 @@
             }
           });
         });
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
       });
    </script>
   </body>
