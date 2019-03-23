@@ -36,12 +36,17 @@ const getIssues = (projectId, cb) => {
   });
 }
 
+const filterIssues = (issue, cb) => {
+  console.log('Issue.js filteredIssues issue', issue.params, issue.body);
+
+}
+
 const createIssue = (issue, cb) => {
 	const projectId = issue.params.project;
 
 	Project.findById(projectId, (err, doc) => {
 		if (err) {
-			console.log('Issue.js createIssue Project.findById err', err);
+			// console.log('Issue.js createIssue Project.findById err', err);
       cb(err, 400);
 		}
 		const newIssue = new Issue({
@@ -79,7 +84,7 @@ const updateIssue = (issue, cb) => {
 
   Project.findById(projectId, (err, doc) => {
     if(err) {
-      console.log('Issue.js updateIssue error', err);
+      // console.log('Issue.js updateIssue error', err);
       cb('Could not update ' + issueId, 400);
     } else {
     	let filteredIssue = doc.issues.filter(is => {if (is._id == issueId) return is});
@@ -109,18 +114,22 @@ const updateIssue = (issue, cb) => {
 const deleteIssue = (issue, cb) => {
   const projectId = issue.params.project;
   const issueId = issue.body._id;
-  Project.findById(projectId, (err, doc) => {
-    if(err) cb(err, 400);
-    
-    let filteredIssues = doc.issues.filter((i, index) => {
-        if (i._id != issueId) {
-          return i;
-        }
-      });
-    doc.issues = filteredIssues;
-    doc.markModified('issues');
-    doc.save();
-  });
+  if (issueId == '') {
+    cb('_id error', 200);
+  } else {
+    Project.findById(projectId, (err, doc) => {
+      if(err) cb('could not delete' + issueId, 400);
+      let filteredIssues = doc.issues.filter((i, index) => {
+          if (i._id != issueId) {
+            return i;
+          }
+        });
+      cb('success: deleted ' + issueId, 200);
+      doc.issues = filteredIssues;
+      doc.markModified('issues');
+      doc.save();
+    });
+  }
 }
 
 module.exports = {
@@ -129,5 +138,7 @@ module.exports = {
   getIssues,
   createIssue,
   updateIssue,
-  deleteIssue
+  deleteIssue,
+  
+  filterIssues
 }
