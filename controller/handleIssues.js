@@ -31,14 +31,15 @@ module.exports = {
 	},
   
   filterIssues: (req, res) => {
-    console.log('made it to controller');
+    // console.log('made it to controller');
     Issue.filterIssues(req, (dbRes, code) => {
+    	return res.status(code).send(dbRes);
     });
   },
   
 	newIssue: (req, res) => {
 		Issue.createIssue(req, (dbRes, code) => {
-      return res.status(code).send(dbRes);
+      		return res.status(code).send(dbRes);
 		});
 	},
 

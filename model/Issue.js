@@ -37,8 +37,50 @@ const getIssues = (projectId, cb) => {
 }
 
 const filterIssues = (issue, cb) => {
-  console.log('Issue.js filteredIssues issue', issue.params, issue.body);
+  let projectId = issue.params.project
+  let searchTitle = issue.body.title;
+  let text = issue.body.text;
+  let author = issue.body.author;
+  let assignee = issue.body.assignee;
+  let statusText = issue.body.statusText;
+  let createdOn = issue.body.createdOn;
+  let updatedOn = issue.body.updatedOn;
+  let open = issue.body.open == 'on' ? true : false;
+  // console.log('Issue.js filteredIssues issue', issue.params.project, issue.body, open);
 
+  Project.aggregate([
+      {$project: 
+        {
+          issues: {
+            $filter: {
+              input: '$issues',
+              as: 'issue',
+              cond: { $or: [
+                  {$eq: ['$$issue.title', searchTitle]},
+                  {$eq: ['$$issue.text', text]},
+                  {$eq: ['$$issue.author', author]},
+                  {$eq: ['$$issue.assignee', assignee]},
+                  {$eq: ['$$issue.statusText', statusText]},
+                  {$eq: ['$$issue.createdOn', createdOn]},
+                  // {$eq: ['$$issue.updatedOn', updatedOn]},
+                  {$eq: ['$$issue.open', open]},
+                ]}
+            }
+          }
+        }
+      }
+    ]).then(data => {
+      // console.log('data',data);
+      Project.findById(projectId, (err, doc) => {
+        if (err) console.log('Issue.js filteredIssue err', err)
+        data.filter(d => {
+          if (d._id == projectId) {
+            console.log(d)
+            cb(d, 200);
+          }
+        })
+      })
+    })
 }
 
 const createIssue = (issue, cb) => {
@@ -56,7 +98,7 @@ const createIssue = (issue, cb) => {
 			assignee: issue.body.assigned_to,
 			statusText: issue.body.status_text,
 			createdOn: new Date(),
-			updatedOn: null,
+			updatedOn: new Date(),
 			open: true
 		})
 		doc.issues.push(newIssue);
@@ -84,7 +126,6 @@ const updateIssue = (issue, cb) => {
 
   Project.findById(projectId, (err, doc) => {
     if(err) {
-      // console.log('Issue.js updateIssue error', err);
       cb('Could not update ' + issueId, 400);
     } else {
     	let filteredIssue = doc.issues.filter(is => {if (is._id == issueId) return is});
@@ -95,12 +136,13 @@ const updateIssue = (issue, cb) => {
 	      doc.save();
     		cb('no updated field sent', 200);
     	} else {
-	      ourIssue.title = issue.body.issue_title == '' ? ourIssue.title : issue.body.issue_title;
-        ourIssue.text = issue.body.issue_text == '' ? ourIssue.text : issue.body.issue_text;
-        ourIssue.author = issue.body.created_by == '' ? ourIssue.author : issue.body.created_by;
+        // console.log(ourIssue, issue.body)
+	      ourIssue.title = issue.body.issue_title == '' || issue.body.issue_title == undefined ? ourIssue.title : issue.body.issue_title;
+        ourIssue.text = issue.body.issue_text == '' || issue.body.issue_text == undefined ? ourIssue.text : issue.body.issue_text;
+        ourIssue.author = issue.body.created_by == '' || issue.body.created_by == undefined ? ourIssue.author : issue.body.created_by;
         ourIssue.assignee = issue.body.assigned_to == '' ? ourIssue.assignee : issue.body.assigned_to;
         ourIssue.statusText = issue.body.status_text == '' ? ourIssue.statusText : issue.body.status_text;
-        ourIssue.open = issue.body.open == 'on' ? ourIssue.open = false : issue.body.open = true;
+        ourIssue.open = issue.body.open == 'on' || issue.body.open == 'true' ? ourIssue.open = false : issue.body.open = true;
         ourIssue.updatedOn = moment().format('YYYY-MM-DD hh:mm a');
 	      doc.markModified('issues');
 	      doc.save();

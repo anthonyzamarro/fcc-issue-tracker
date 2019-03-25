@@ -49,9 +49,33 @@
             Filter Issues
           </h3>
         <form id="filter-form" method="post">
-          <div class="filter-title">
+          <div class="filter filter-title">
             <label>Title</label>
-            <input type="text" id="filter-title" name="title"/>
+            <input type="text" id="filter-title"name="title"/>
+          </div>
+          <div class="filter filter-text">
+            <label>Text</label>
+            <input type="text" id="filter-text"name="text"/>
+          </div>
+          <div class="filter filter-author">
+            <label>Author</label>
+            <input type="text" id="filter-author"name="author"/>
+          </div>
+          <div class="filter filter-assignee">
+            <label>Assignee</label>
+            <input type="text" id="filter-assignee"name="assignee"/>
+          </div>
+          <div class="filter filter-status-text">
+            <label>Status Text</label>
+            <input type="text" id="filter-status-text" name="statusText"/>
+          </div>
+          <div class="filter filter-created-on">
+            <label>Created On</label>
+            <input type="text" id="filter-created-on" name="created-on"/>
+          </div>
+          <div class="filter filter-updated-on">
+            <label>Updated On</label>
+            <input type="text" id="filter-updated-on" name="updated-on"/>
           </div>
           <div class="filter-open">
             <label>Open</label>
@@ -109,6 +133,8 @@
             data: $(this).serialize(),
             success: function(data) {
               console.log('#filter-form',data);
+              issues = data.issues;
+              $('#issueDisplay').html(issues);
             }
           });
         })
@@ -147,13 +173,18 @@
         });    
         
         $('#issueDisplay').on('click','.closeIssue', function(e) {
-          var url = "/api/issues/"+currentProject;
+          // var url = "/api/issues/"+currentProject;
+          console.log($(this))
+          var $this = $(this);
           $.ajax({
             type: "PUT",
             url: url,
-            data: {_id: currentProject, open: false},
+            data: {_id: $(this).attr('id'), open: true},
             success: function(data) { 
-              console.log('issue.html PUT request', data);
+              $this.closest('div.issue').addClass('closed').removeClass('open');
+            },
+            error: function(data) {
+              console.log('issue.html PUT error', data);
             }
           });
           e.preventDefault();
@@ -162,7 +193,6 @@
         $('#issueDisplay').on('click','.deleteIssue', function(e) {
           var url = "/api/issues/"+currentProject;
           e.preventDefault();
-          // console.log(e);
 
           $.ajax({
             type: "DELETE",
