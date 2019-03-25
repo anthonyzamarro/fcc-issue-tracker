@@ -16,11 +16,11 @@ chai.use(chaiHttp);
 
 suite('Functional Tests', function() {
   
-    suite('POST /api/issues/fcc => object with issue data', function() {
+    suite('POST /api/issues/5c983624f42ebc6cd2a72415 => object with issue data', function() {
       
       test('Every field filled in', function(done) {
        chai.request(server)
-        .post('/api/issues/fcc')
+        .post('/api/issues/5c983624f42ebc6cd2a72415')
         .send({
           issue_title: 'Title',
           issue_text: 'text',
@@ -34,16 +34,16 @@ suite('Functional Tests', function() {
           const { title, text, author, assignee, statusText } = obj;
           assert.equal(title, "Title");
           assert.equal(text, "text");
-          assert.notEqual(author, "");
-          assert.notEqual(assignee, "");
-          assert.notEqual(statusText, "");
+          assert.equal(author, "Functional Test - Every field filled in");
+          assert.equal(assignee, "Chai and Mocha");
+          assert.equal(statusText, "In QA");
           done();
         });
       });
       
       test('Required fields filled in', function(done) {
         chai.request(server)
-          .post('/api/issues/fcc')
+          .post('/api/issues/5c983624f42ebc6cd2a72415')
           .send({
             issue_title: 'Title',
             assigned_to: 'Chai and Mocha',
@@ -51,7 +51,7 @@ suite('Functional Tests', function() {
           })
           .end((err, res) => {
             assert.equal(res.status, 200);
-            console.log('required fields', res);
+            // console.log('required fields', res.body);
             const obj = res.body._doc;
             const { title, text, author } = obj;
             assert.notEqual(title, "");
@@ -63,30 +63,39 @@ suite('Functional Tests', function() {
       
       test('Missing required fields', function(done) {
         chai.request(server)
-          .post('/api/issues/fcc')
+          .post('/api/issues/5c983624f42ebc6cd2a72415')
           .send({
             assigned_to: 'Chai and Mocha',
             status_text: 'In QA'
           })
           .end((err, res) => {
             assert.equal(res.status, 200);
-            console.log('missing fields', res)
             const obj = res.body._doc;
             const { title, text, author } = obj;
-            assert.equal(title, "");
-            assert.equal(text, "");
-            assert.equal(author, "");
-            // console.log('obj', obj)
+            // console.log('missing fields', title, text, author)
+            assert.isUndefined(title);
+            assert.isUndefined(text);
+            assert.isUndefined(author);
             done();
           })
       });
       
     });
     
-    suite('PUT /api/issues/fcc => text', function() {
+    suite('PUT /api/issues/5c983624f42ebc6cd2a72415 => text', function() {
       
       test('No body', function(done) {
-        
+        chai.request(server)
+          .put('/api/issues/5c983624f42ebc6cd2a72415')
+          // .send({
+          //   status_text: 'In QA'
+          // })
+          .end((err, res) => {
+            assert.equal(res.status, 200);
+            console.log('PUT error', err)
+            console.log('PUT response', res.body)
+            done();
+          })
       });
       
       test('One field to update', function(done) {
@@ -99,11 +108,11 @@ suite('Functional Tests', function() {
       
     });
     
-    suite('GET /api/issues/fcc => Array of objects with issue data', function() {
+    suite('GET /api/issues/5c983624f42ebc6cd2a72415 => Array of objects with issue data', function() {
       
       test('No filter', function(done) {
         chai.request(server)
-        .get('/api/issues/test')
+        .get('/api/issues/5c983624f42ebc6cd2a72415')
         .query({})
         .end(function(err, res){
           assert.equal(res.status, 200);
@@ -131,7 +140,7 @@ suite('Functional Tests', function() {
       
     });
     
-    suite('DELETE /api/issues/fcc => text', function() {
+    suite('DELETE /api/issues/5c983624f42ebc6cd2a72415 => text', function() {
       
       test('No _id', function(done) {
         
