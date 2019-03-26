@@ -5,6 +5,127 @@
 
 body {
   padding: 10px;
+  font-family: Tahoma, Geneva, sans-serif;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: Impact, Charcoal, sans-serif;
+}
+
+
+
+li {
+  list-style: none;
+  margin: 6px 0;
+}
+
+input,
+textarea {
+  width: 100%;
+  height: 33px;
+  margin: 5px 0;
+  border-radius: 5px;
+  background: none;
+  border: 1px solid;
+  box-shadow: inset 0px 0px 1px #333;
+}
+
+textarea {
+  height: 100px;
+
+}
+
+.submit {
+  height: 38px;
+  padding: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  background: orange;
+  opacity: .9;
+  font-size: 18px;
+  float: right;
+  clear: both;
+  position: relative;
+  top: 21px;
+}
+
+.add-project__submit {
+  float: none;
+  top: 0px;
+}
+
+.submit:hover {
+  opacity: 1
+}
+
+/* index.html */
+.add-project {
+  max-width: 1400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.add-project > h2 {
+  margin-bottom: 24px;
+}
+
+.projects-list-container {
+  margin: 20px 0;
+}
+
+.add-project__input {
+  width: 50%;
+  height: 36px;
+  border-radius: 5px;
+  border: 1px solid gray;
+/*   box-shadow: 0px 1px 0px #ededed; */
+}
+
+.project-list__item {
+  font-size: 24px;
+  font-variant: small-caps;
+  text-decoration: none;
+  color: #084d5f;
+}
+
+.project-list__item:hover {
+  color: #000;
+}
+
+
+/*  issue.html */
+
+.issue-forms-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-evenly;
+}
+
+.ifc__form {
+  flex: 0 0 33%;
+  margin: 0 20px;
+}
+
+.form-edit {
+  margin-bottom: 50px;
+}
+
+.issue-display {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.issue {
+  flex: 1 0 500px;
+}
+
+.issue-notification {
+  width: 80%;
+  margin: 0 auto;
+  background: lightblue;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 32px;
 }
 
 .issue {
@@ -22,12 +143,86 @@ body {
   font-size: 10.5px;
 }
 
-center {
+
+.filter {
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
+  justify-content: space-between;
 }
 
-.issue-container {
+.filter > input {
+  width: 50%;
+  margin-left: 10px;
+  
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+/* .checkbox > input,
+.checkbox > label {
+  flex: 1 0 100px;
+} */
+
+.checkbox > input {
+  text-align: right;
+  max-width: 100px;
+  height: 15px;
+  box-shadow: none;
+  position: absolute;
+  right: -1037px;
+}
+
+.checkbox >input:after {
+  content: "";
+  height: 25px;
+  width: 25px;
+  border: 1px solid black;
+  display: block;
+  position: absolute;
+  left: -967px;
+}
+
+input[type=checkbox] + label {
+  color: purple;
+  background: yellow;
+}
+
+input[type=checkbox]:checked + label {
+  color: red;
+  background: blue;
+}
+
+.checkbox > label {
+  text-align: left;
   flex: 1;
+}
+
+
+@media screen and (max-width: 560px) {
+  .issue-forms-container {
+    flex-direction: column;
+  }
+  .issue-display {
+    flex-direction: column;
+  }
+  .issue {
+    width: 100%;
+    flex: 1 0 200px;
+    padding: 0;
+    margin: 8px 0;
+  }
+  .ifc__form {
+    width: 100%;
+    margin: 20px 0;
+  }
+  .submit {
+    height: 30px;
+  }
+  .checkbox > input {
+    height: 20px;
+  }
 }

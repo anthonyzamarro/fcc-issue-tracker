@@ -4,6 +4,7 @@
     <title>Welcome to HyperDev!</title>
     <meta name="description" content="A cool thing made with HyperDev">
     <link id="favicon" rel="icon" href="https://hyperdev.com/favicon-app.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="./public/style.css">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -36,22 +37,24 @@
       <h2><a href="/apitest/">EXAMPLE: Go to <i>/apitest/</i> project issues</a></h2>
     </div>
     <hr style="margin: 50px">
-    <form id="add-project" method="post" action="/">
+    <form id="add-project" class="add-project" method="post" action="/">
       <h2>
         Create a new Project
       </h2>
-      <input type="text" name="project_title" placeholder="add project" id="new-project"/>
-      <button type="submit">
+      <input type="text" name="project_title" class="add-project__input text-input" placeholder="add project" id="new-project"/>
+      <button type="submit" class="add-project__submit submit">
         Create Project
       </button>
       <div class="projects-list-container">
-        <ul id="project-list">
-          
+        <h2>
+          Current Projects
+        </h2>
+        <ul id="project-list" class="project-list">
         </ul>
       </div>
       <div class="new-project-container" id="jsonData"></div>
     </form>
-    <hr style="margin: 50px; margin-top: 200px">
+    <hr style="margin: 50px;">
     <!-- Your web-app is https, so your scripts need to be too -->
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"
             integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
@@ -66,7 +69,7 @@
             success: (data) => {
               data.forEach(project => {
                 // console.log(project)
-                $('#project-list').append('<li><a href="'+project._id+'">'+ project.title +'</a></li>')
+                $('#project-list').append('<li><a class="project-list__item"  href="'+project._id+'">'+ project.title +'</a></li>')
               });
             },
             error: (data) => {
@@ -81,49 +84,15 @@
             type: 'post',
             data: $('#new-project').serialize(),
             success: (data) => {
-              const sluggedTitle = data._doc.title
-                                        .toLowerCase()
-                                        .replace(/[^\w ]+/g,'')
-                                        .replace(/ +/g,'-');
-              // $('#jsonData').html('<div>Project successfully created! visit it here:</div><a href="'+sluggedTitle+'-'+data._doc._id+'">'+data._doc.title+'</a>')
-              $('#jsonData').html('<div>Project successfully created! visit it here:</div><a href="'+data._doc._id+'">'+data._doc.title+'</a>')
-              $('#project-list').append('<li>'+ data._doc.title +'</li>')
+              // const sluggedTitle = data._doc.title
+              //                           .toLowerCase()
+              //                           .replace(/[^\w ]+/g,'')
+              //                           .replace(/ +/g,'-');
+              $('#jsonData').html('<div>Project successfully created! visit it here:</div><a href="'+data._doc._id+'>'+data._doc.title+'</a>')
+              // $('#project-list').append('<li>'+ data._doc.title +'</li>')
             }
           });
         });
-        // $('#testForm').submit(function(e) {
-        //   $.ajax({
-        //     url: '/api/issues/fcc',
-        //     type: 'post',
-        //     data: $('#testForm').serialize(),
-        //     success: function(data) {
-        //       $('#jsonResult').text(JSON.stringify(data));
-        //     }
-        //   });
-        //   e.preventDefault();
-        // });
-        // $('#testForm2').submit(function(e) {
-        //   $.ajax({
-        //     url: '/api/issues/fcc',
-        //     type: 'put',
-        //     data: $('#testForm2').serialize(),
-        //     success: function(data) {
-        //       $('#jsonResult').text(JSON.stringify(data));
-        //     }
-        //   });
-        //   e.preventDefault();
-        // });
-        // $('#testForm3').submit(function(e) {
-        //   $.ajax({
-        //     url: '/api/issues/fcc',
-        //     type: 'delete',
-        //     data: $('#testForm3').serialize(),
-        //     success: function(data) {
-        //       $('#jsonResult').text(JSON.stringify(data));
-        //     }
-        //   });
-        //   e.preventDefault();
-        // });
       });
    </script>
   </body>

@@ -13,54 +13,88 @@
     <header>
       <h1 id='projectTitle'></h1>
     </header>
-    <center> 
-      <div id='testui' style='margin-left: 5%'>
-        <h3>Submit a new issue:</h3>
-        <form id="newIssue" method="post" action="/api/">
-          <input type="text" name="issue_title" placeholder="*Title" style="width: 320px; margin-bottom: 3px;" required=''><br>
-          <textarea type="text" name="issue_text" placeholder="*Text" style="width: 320px; height: 100px;" required=''></textarea><br>
-          <input type="text" name="created_by" placeholder="*Created by" style="width: 100px" required=''>
-          <input type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px">
-          <input type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
-          <button type="submit">Submit Issue</button>
-        </form>
-        <form id="testForm2" class="border">
-          <h3>Edit issue</h3>
-          <input type="text" name="_id" placeholder="*_id" style="width: 100px" required=''><br>
-          <input type="text" name="issue_title" placeholder="(opt)Title" style="width: 100px"><br>
-          <textarea type="text" name="issue_text" placeholder="(opt)Text" style="width: 100px"></textarea><br>
-          <input type="text" name="created_by" placeholder="(opt)Created by" style="width: 100px"><br>
-          <input type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px"><br>
-          <input type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
-          <label><input type="checkbox" name="open"> Check to close issue</label><br>
-          <button type="submit">Submit Issue</button>
-        </form>
-        <h3>Delete issue on <i>apitest</i></h3>
-        <form id="testForm3" class="border">
-          <input type="text" name="_id" placeholder="_id" style="width: 100px"><br>
-          <button type="submit">Delete Issue</button>
-        </form>
-        <code id='jsonResult'></code>
-      </div>
-      
-      <hr style='margin: 50px; margin-top: 200px'>
-      <div class="filters">
+    <center>
+      <div id='jsonResult' class="issue-notification"></div>
+      <div id='testui' class="issue-forms-container">
+        <div class="ifc__form">
+          <form id="newIssue" method="post" action="/api/">
+            <h3>Submit a new issue</h3>
+            <input type="text" name="issue_title" placeholder="*Title" required=''><br>
+            <textarea type="text" name="issue_text" placeholder="*Text" required=''></textarea><br>
+            <input type="text" name="created_by" placeholder="*Created by" required=''>
+            <input type="text" name="assigned_to" placeholder="(opt)Assigned to">
+            <input type="text" name="status_text" placeholder="(opt)Status text"><br>
+            <button type="submit" class="submit">Create Issue</button>
+          </form>
+        </div>
+        <div class="ifc__form"> 
+          <form id="testForm2" class="form-edit">
+            <h3>Edit issue</h3>
+            <input type="text" name="_id" placeholder="*_id" required=''><br>
+            <input type="text" name="issue_title" placeholder="(opt)Title"><br>
+            <textarea type="text" name="issue_text" placeholder="(opt)Text"></textarea><br>
+            <input type="text" name="created_by" placeholder="(opt)Created by"><br>
+            <input type="text" name="assigned_to" placeholder="(opt)Assigned to"><br>
+            <input type="text" name="status_text" placeholder="(opt)Status text"><br>
+            <div class="checkbox">
+              <label>Check to close issue</label>
+              <input type="checkbox" name="open"> 
+            </div>
+            <button type="submit" class="submit">Submit Issue</button>
+          </form>
+          <form id="testForm3" class="border">
+            <h3>Delete issue</h3>
+            <input type="text" name="_id" placeholder="_id"><br>
+            <button type="submit" class="submit">Delete Issue</button>
+          </form>
+        </div>
+<!--         <div class="ifc__form"> 
+        </div> -->
+        <div class="filters">
           <h3>
             Filter Issues
           </h3>
         <form id="filter-form" method="post">
-          <div class="filter-title">
+          <div class="filter filter-title">
             <label>Title</label>
-            <input type="text" id="filter-title" name="title"/>
+            <input type="text" id="filter-title"name="title"/>
           </div>
-          <div class="filter-open">
+          <div class="filter filter-text">
+            <label>Text</label>
+            <input type="text" id="filter-text"name="text"/>
+          </div>
+          <div class="filter filter-author">
+            <label>Author</label>
+            <input type="text" id="filter-author"name="author"/>
+          </div>
+          <div class="filter filter-assignee">
+            <label>Assignee</label>
+            <input type="text" id="filter-assignee"name="assignee"/>
+          </div>
+          <div class="filter filter-status-text">
+            <label>Status Text</label>
+            <input type="text" id="filter-status-text" name="statusText"/>
+          </div>
+          <div class="filter filter-created-on">
+            <label>Created On</label>
+            <input type="text" id="filter-created-on" name="created-on"/>
+          </div>
+          <div class="filter filter-updated-on">
+            <label>Updated On</label>
+            <input type="text" id="filter-updated-on" name="updated-on"/>
+          </div>
+          <div class="filter-open checkbox">
             <label>Open</label>
             <input type="checkbox" id="filter-open" name="open"/>
           </div>
-          <button type="submit" id="filter-submit">Filter</button>
+          <button type="submit" id="filter-submit" class="submit">Filter</button>
         </form>
         </div>
-      <div id='issueDisplay'></div>
+        <div id='newIssueDisplay' class="new-issue-display"></div>
+      </div>
+      
+      <hr style='margin: 50px; margin-top: 200px'>
+      <div id='issueDisplay' class="issue-display"></div>
     </center>
     
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"
@@ -71,13 +105,15 @@
         var currentProject = window.location.pathname.replace(/\//g, "");
         var url = "/api/issues/"+currentProject;
         var issues = [];
-        $('#projectTitle').text('All issues for: '+currentProject);
+        const formatIssues = (issue) => {
+        
+        }
         $.ajax({
           type: "GET",
           url: url,
           success: function(data)
           {
-            data.forEach(function(ele) {
+            data.issues.forEach(function(ele) {
               var openstatus;
               (ele.open) ? openstatus = 'open' : openstatus = 'closed';
               var single = [
@@ -95,11 +131,10 @@
               ];
               issues.push(single.join(''));
             });
+            $('#projectTitle').text('All issues for: '+data.title);
             $('#issueDisplay').html(issues.join(''));
           }
         });
-        
-        
           
         $('#filter-form').submit(function(e) {
           e.preventDefault();
@@ -109,6 +144,8 @@
             data: $(this).serialize(),
             success: function(data) {
               console.log('#filter-form',data);
+              issues = data.issues;
+              $('#issueDisplay').html(data.issues);
             }
           });
         })
@@ -125,7 +162,7 @@
               const updated = data._doc.updatedOn == null ? 'not updated' : data._doc.updatedOn
               const openStatus = data._doc.open == false ? 'open' : 'closed';
               const formatNewIssue = `
-                <div class="project-container">
+                <div>
                   <h1>${data._doc.title} </h1>
                   <p>${data._doc.text}</p>
                   <p>assigned to: ${assignee}</p>
@@ -133,27 +170,31 @@
                   <small>Created by: ${data._doc.author} / created: ${data._doc.createdOn} / updated: ${updated} / issue ID: ${data.id}</small>
                 </div>`;
               issues.push(formatNewIssue)
-              $('#issueDisplay').html(issues.join(''));
+              $('#newIssueDisplay').html(formatNewIssue);
             },
             error: (data) => {
               const jsonParsed = JSON.parse(data.responseText);
               $('#issueDisplay').html('');
               $('#issueDisplay').prepend('<h1>Status '+data.status+ ' ' + data.statusText+'</h1>')
               for(let i in jsonParsed.errors) {
-                $('#issueDisplay').append('<h2>'+jsonParsed.errors[i].message+'</h2>');
+                $('#newIssueDisplay').append('<h2>'+jsonParsed.errors[i].message+'</h2>');
               }
             }
           });
         });    
         
         $('#issueDisplay').on('click','.closeIssue', function(e) {
-          var url = "/api/issues/"+currentProject;
+          console.log($(this))
+          var $this = $(this);
           $.ajax({
             type: "PUT",
             url: url,
-            data: {_id: currentProject, open: false},
+            data: {_id: $(this).attr('id'), open: true},
             success: function(data) { 
-              console.log('issue.html PUT request', data);
+              $this.closest('div.issue').addClass('closed').removeClass('open');
+            },
+            error: function(data) {
+              console.log('issue.html PUT error', data);
             }
           });
           e.preventDefault();
@@ -162,7 +203,6 @@
         $('#issueDisplay').on('click','.deleteIssue', function(e) {
           var url = "/api/issues/"+currentProject;
           e.preventDefault();
-          // console.log(e);
 
           $.ajax({
             type: "DELETE",
@@ -206,7 +246,6 @@
             data: $('#testForm2').serialize(),
             success: function(data) {
               $('#jsonResult').text(JSON.stringify(data));
-
             }
           });
         });
