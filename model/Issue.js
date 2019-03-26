@@ -31,7 +31,7 @@ const getIssues = (projectId, cb) => {
     if(err) {
       cb(err, 400);
     } else {
-      cb(doc.issues, 200);
+      cb({'title':doc.title, 'issues': doc.issues}, 200);
     }
   });
 }
@@ -63,7 +63,7 @@ const filterIssues = (issue, cb) => {
                   {$eq: ['$$issue.statusText', statusText]},
                   {$eq: ['$$issue.createdOn', createdOn]},
                   // {$eq: ['$$issue.updatedOn', updatedOn]},
-                  {$eq: ['$$issue.open', open]},
+                  // {$eq: ['$$issue.open', open]},
                 ]}
             }
           }

@@ -21,6 +21,7 @@ module.exports = function (app) {
         .post(controller.newIssue)
         .put(controller.updateIssue)
         .delete(controller.deleteIssue)
+  
     app.route('/api/issues/:project/:filters')
         .post(controller.filterIssues)
 };
