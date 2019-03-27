@@ -8,12 +8,13 @@
 
 var chaiHttp = require('chai-http');
 var chai = require('chai');
-// const chaiDom = require('chaiDom');
 var assert = chai.assert;
 var expect = chai.expect
 var server = require('../server');
 
 chai.use(chaiHttp);
+
+let issueId;
 
 suite('Functional Tests', function() {
   
@@ -33,6 +34,9 @@ suite('Functional Tests', function() {
           assert.equal(res.status, 200);
           const obj = res.body._doc;
           const { title, text, author, assignee, statusText } = obj;
+
+          issueId = obj._id
+
           assert.equal(title, "Title");
           assert.equal(text, "text");
           assert.equal(author, "Functional Test - Every field filled in");
@@ -52,7 +56,6 @@ suite('Functional Tests', function() {
           })
           .end((err, res) => {
             assert.equal(res.status, 200);
-            // console.log('required fields', res.body);
             const obj = res.body._doc;
             const { title, text, author } = obj;
             assert.notEqual(title, "");
@@ -73,7 +76,6 @@ suite('Functional Tests', function() {
             assert.equal(res.status, 200);
             const obj = res.body._doc;
             const { title, text, author } = obj;
-            // console.log('missing fields', title, text, author)
             assert.isUndefined(title);
             assert.isUndefined(text);
             assert.isUndefined(author);
@@ -90,11 +92,10 @@ suite('Functional Tests', function() {
           .put('/api/issues/5c983624f42ebc6cd2a72415')
           .send({
             project: '5c983624f42ebc6cd2a72415',
-            _id: '5c9836e7f42ebc6cd2a72418'
+            _id: issueId
           })
           .end((err, res) => {
             assert.equal(res.status, 200);
-            // console.log('PUT response!!!!', res.body)
             expect(res.body).to.be.empty
             done();
           })
@@ -105,7 +106,7 @@ suite('Functional Tests', function() {
           .put('/api/issues/5c983624f42ebc6cd2a72415')
           .send({
             project: '5c983624f42ebc6cd2a72415',
-            _id: '5c9836e7f42ebc6cd2a72418',
+            _id: issueId,
             title: 'Chai and Mocha TESTING'
           })
           .end((err, res) => {
@@ -120,7 +121,7 @@ suite('Functional Tests', function() {
           .put('/api/issues/5c983624f42ebc6cd2a72415')
           .send({
             project: '5c983624f42ebc6cd2a72415',
-            _id: '5c9836e7f42ebc6cd2a72418',
+            _id: issueId,
             title: 'Chai and Mocha TESTING',
             status_text: 'In QA'
           })
@@ -141,7 +142,6 @@ suite('Functional Tests', function() {
         .get('/api/issues/5c983624f42ebc6cd2a72415')
         .query({})
         .end(function(err, res){
-          // console.log(err, res.body)
           assert.equal(res.status, 200);
           assert.isArray(res.body);
           assert.property(res.body[1], 'title');
@@ -161,10 +161,9 @@ suite('Functional Tests', function() {
         chai.request(server)
         .get('/api/issues/5c983624f42ebc6cd2a72415')
         .query({
-          title: 'first'
+          title: 'Chai and Mocha TESTING'
         })
         .end(function(err, res){
-          // console.log(err, res)
           assert.equal(res.status, 200);
           assert.isArray(res.body);
           expect(res.request.qs).to.not.be.empty
@@ -176,8 +175,8 @@ suite('Functional Tests', function() {
         chai.request(server)
         .get('/api/issues/5c983624f42ebc6cd2a72415')
         .query({
-          title: 'first',
-          author: 'me'
+          title: 'Chai and Mocha TESTING',
+          author: 'Functional Test - Every field filled in'
         })
         .end(function(err, res){
           assert.equal(res.status, 200);
@@ -193,30 +192,26 @@ suite('Functional Tests', function() {
       
       test('No _id', function(done) {
         chai.request(server)
-        .get('/api/issues/5c983624f42ebc6cd2a72415')
+        .delete('/api/issues/5c983624f42ebc6cd2a72415')
         .send({
           project: '5c983624f42ebc6cd2a72415',
-          // _id: ''
+          _id: ''
         })
         .end((err, res) => {
-          // console.log('DELETE res', res.body[0])
-          console.log('DELETE err', err)
-          expect(res.body[0]).to.exist
+          assert.equal(res.text, '_id error')
           done();
         })
       });
       
       test('Valid _id', function(done) {
         chai.request(server)
-        .get('/api/issues/5c983624f42ebc6cd2a72415')
+        .delete('/api/issues/5c983624f42ebc6cd2a72415')
         .send({
           project: '5c983624f42ebc6cd2a72415',
-          _id: '5c9836e7f42ebc6cd2a72418'
+          _id: issueId
         })
         .end((err, res) => {
-          console.log('DELETE res', res.body[0])
-          console.log('DELETE err', err)
-          expect(res.body[0]).to.not.exist
+          assert.equal(res.text, 'success: deleted ' + issueId)
           done();
         })
       });

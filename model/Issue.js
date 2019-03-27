@@ -46,7 +46,13 @@ const filterIssues = (issue, cb) => {
   let createdOn = issue.body.createdOn;
   let updatedOn = issue.body.updatedOn;
   let open = issue.body.open == 'on' ? true : false;
-  // console.log('Issue.js filteredIssues issue', issue.params.project, issue.body, open);
+  
+  const isEmpty = Object.values(issue.body).every(x => (x === null || x === ''));
+  
+  if  (isEmpty) {
+    cb('empty filters', 200);
+    return;
+  }
 
   Project.aggregate([
       {$project: 
@@ -70,17 +76,16 @@ const filterIssues = (issue, cb) => {
         }
       }
     ]).then(data => {
-      // console.log('data',data);
-      Project.findById(projectId, (err, doc) => {
-        if (err) console.log('Issue.js filteredIssue err', err)
-        data.filter(d => {
-          if (d._id == projectId) {
-            console.log(d)
-            cb(d, 200);
-          }
-        })
+    Project.findById(projectId, (err, doc) => {
+      if (err) console.log('Issue.js filteredIssue err', err)
+      data.filter(d => {
+        if (d._id == projectId) {
+          // console.log(d)
+          cb(d, 200);
+        }
       })
     })
+  })
 }
 
 const createIssue = (issue, cb) => {
@@ -159,18 +164,26 @@ const deleteIssue = (issue, cb) => {
   if (issueId == '') {
     cb('_id error', 200);
   } else {
-    Project.findById(projectId, (err, doc) => {
-      if(err) cb('could not delete' + issueId, 400);
-      let filteredIssues = doc.issues.filter((i, index) => {
-          if (i._id != issueId) {
-            return i;
-          }
-        });
-      cb('success: deleted ' + issueId, 200);
-      doc.issues = filteredIssues;
-      doc.markModified('issues');
-      doc.save();
-    });
+    
+    Project.update({_id: projectId },
+                   { $pull: { issues: { _id: issueId } } }, (err, doc) => {
+        if(err) {
+          cb('could not delete ' + issueId, 400)
+        } else {
+          cb('success: deleted ' + issueId, 200);
+        }
+    })
+      // let filteredIssues = doc.issues.filter((i) => {
+      //     // if (i._id != issueId) {
+      //     //   return 'ID not found';
+      //     // }
+      //   });
+      
+      // cb('success: deleted ' + issueId, 200);
+      // doc.issues = filteredIssues;
+      // doc.markModified('issues');
+      // doc.save();
+    // });
   }
 }
 

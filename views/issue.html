@@ -48,8 +48,6 @@
             <button type="submit" class="submit">Delete Issue</button>
           </form>
         </div>
-<!--         <div class="ifc__form"> 
-        </div> -->
         <div class="filters">
           <h3>
             Filter Issues
@@ -57,37 +55,38 @@
         <form id="filter-form" method="post">
           <div class="filter filter-title">
             <label>Title</label>
-            <input type="text" id="filter-title"name="title"/>
+            <input type="text" id="filter-title" class="filter-input" name="title"/>
           </div>
           <div class="filter filter-text">
             <label>Text</label>
-            <input type="text" id="filter-text"name="text"/>
+            <input type="text" id="filter-text" class="filter-input" name="text"/>
           </div>
           <div class="filter filter-author">
             <label>Author</label>
-            <input type="text" id="filter-author"name="author"/>
+            <input type="text" id="filter-author" class="filter-input" name="author"/>
           </div>
           <div class="filter filter-assignee">
             <label>Assignee</label>
-            <input type="text" id="filter-assignee"name="assignee"/>
+            <input type="text" id="filter-assignee" class="filter-input" name="assignee"/>
           </div>
           <div class="filter filter-status-text">
             <label>Status Text</label>
-            <input type="text" id="filter-status-text" name="statusText"/>
+            <input type="text" id="filter-status-text" class="filter-input" name="statusText"/>
           </div>
           <div class="filter filter-created-on">
             <label>Created On</label>
-            <input type="text" id="filter-created-on" name="created-on"/>
+            <input type="text" id="filter-created-on" class="filter-input" name="created-on"/>
           </div>
           <div class="filter filter-updated-on">
             <label>Updated On</label>
-            <input type="text" id="filter-updated-on" name="updated-on"/>
+            <input type="text" id="filter-updated-on" class="filter-input" name="updated-on"/>
           </div>
           <div class="filter-open checkbox">
             <label>Open</label>
-            <input type="checkbox" id="filter-open" name="open"/>
+            <input type="checkbox" id="filter-open" class="filter-checkbox" name="open"/>
           </div>
           <button type="submit" id="filter-submit" class="submit">Filter</button>
+          <button type="submit" id="filter-clear" class="submit">Clear</button>
         </form>
         </div>
         <div id='newIssueDisplay' class="new-issue-display"></div>
@@ -105,9 +104,46 @@
         var currentProject = window.location.pathname.replace(/\//g, "");
         var url = "/api/issues/"+currentProject;
         var issues = [];
-        const formatIssues = (issue) => {
         
+        // takes array and returns string
+        const formatIssues = (filteredIssues) => {
+          // console.log('formatIssues', filteredIssues)
+          let fi = filteredIssues.map(filteredIssue => {
+            var openstatus;
+                (filteredIssue.open) ? openstatus = 'open' : openstatus = 'closed';
+                var single = [
+                  '<div class="issue '+openstatus+'">',
+                  '<p class="id">id: '+filteredIssue._id+'</p>',
+                  '<h3>'+filteredIssue.title+' -  ('+openstatus+')</h3>',
+                  '<br>',
+                  '<p>'+filteredIssue.text+'</p>',
+                  '<p>'+filteredIssue.statusText+'</p>',
+                  '<br>',
+                  '<p class="id"><b>Created by:</b> '+filteredIssue.author+'  <b>Assigned to:</b> '+filteredIssue.assignee,
+                  '<p class="id"><b>Created on:</b> '+filteredIssue.createdOn+'  <b>Last updated:</b> '+filteredIssue.updatedOn,
+                  '<br><a href="#" class="closeIssue" id="'+filteredIssue._id+'">close?</a> <a href="#" class="deleteIssue" id="'+filteredIssue._id+'">delete?</a>',
+                  '</div>'
+                ];
+                return single.join('');
+          })
+          return fi.join('');
         }
+        
+         const closeNotification = () => {
+          $('#jsonResult').click(function(index, item) {
+            $('#jsonResult').html('')
+          })
+        }
+         closeNotification();
+        
+        // takes string and returns html as string
+        const formatNotification = (string) => {
+          return '<div class="notification-content">'+string+'<span class="close-notification">X</span></div>'
+        }
+        
+
+        // GET
+        // displays on page load
         $.ajax({
           type: "GET",
           url: url,
@@ -125,7 +161,7 @@
                 '<p>'+ele.statusText+'</p>',
                 '<br>',
                 '<p class="id"><b>Created by:</b> '+ele.author+'  <b>Assigned to:</b> '+ele.assignee,
-                '<p class="id"><b>Created on:</b> '+ele.author+'  <b>Last updated:</b> '+ele.updatedOn,
+                '<p class="id"><b>Created on:</b> '+ele.createdOn+'  <b>Last updated:</b> '+ele.updatedOn,
                 '<br><a href="#" class="closeIssue" id="'+ele._id+'">close?</a> <a href="#" class="deleteIssue" id="'+ele._id+'">delete?</a>',
                 '</div>'
               ];
@@ -135,7 +171,23 @@
             $('#issueDisplay').html(issues.join(''));
           }
         });
-          
+                
+        // GET
+        // reset display from filters
+        $('#filter-clear').click(function(e) {
+          e.preventDefault();
+          $.ajax({
+            url: url,
+            type: 'get',
+            success: function(data) {
+              $('#issueDisplay').html(formatIssues(data.issues));
+              $('.filter-input').val('');
+            }
+          });
+        });
+        
+        // POST
+        // filter issues
         $('#filter-form').submit(function(e) {
           e.preventDefault();
           $.ajax({
@@ -143,13 +195,17 @@
             type: 'post',
             data: $(this).serialize(),
             success: function(data) {
-              console.log('#filter-form',data);
-              issues = data.issues;
-              $('#issueDisplay').html(data.issues);
+              if  (data == 'empty filters') {
+                $('#jsonResult').html(formatNotification(data));
+              } else {
+                $('#issueDisplay').html(formatIssues(data.issues));
+              }
             }
           });
-        })
+        });
         
+        // POST
+        // create new issue and display it
         $('#newIssue').submit(function(e){
           e.preventDefault();
           $(this).attr('action', "/api/issues/" + currentProject);
@@ -158,31 +214,38 @@
             url: url,
             data: $(this).serialize(),
             success: function(data) {
-              const assignee = data._doc.assignee == '' ? 'no one' : data._doc.assignee;
-              const updated = data._doc.updatedOn == null ? 'not updated' : data._doc.updatedOn
-              const openStatus = data._doc.open == false ? 'open' : 'closed';
-              const formatNewIssue = `
-                <div>
-                  <h1>${data._doc.title} </h1>
-                  <p>${data._doc.text}</p>
-                  <p>assigned to: ${assignee}</p>
-                  <p><input type="checkbox" id="issueCheckbox"/> status: ${openStatus}</p>
-                  <small>Created by: ${data._doc.author} / created: ${data._doc.createdOn} / updated: ${updated} / issue ID: ${data.id}</small>
-                </div>`;
-              issues.push(formatNewIssue)
-              $('#newIssueDisplay').html(formatNewIssue);
+              let formatted = formatIssues([data._doc])
+              issues.push(formatted)
+              $('#issueDisplay').html(issues);
+              $('#newIssue input, textarea').val('');
             },
             error: (data) => {
               const jsonParsed = JSON.parse(data.responseText);
               $('#issueDisplay').html('');
               $('#issueDisplay').prepend('<h1>Status '+data.status+ ' ' + data.statusText+'</h1>')
               for(let i in jsonParsed.errors) {
-                $('#newIssueDisplay').append('<h2>'+jsonParsed.errors[i].message+'</h2>');
+                $('#issueDisplay').append('<h2>'+jsonParsed.errors[i].message+'</h2>');
               }
             }
           });
         });    
         
+        // PUT
+        // by entering Id and fields
+        $('#testForm2').submit(function(e) {
+          e.preventDefault();
+          $.ajax({
+            url: url,
+            type: 'put',
+            data: $('#testForm2').serialize(),
+            success: function(data) {
+              $('#jsonResult').html(formatNotification(JSON.stringify(data)));
+            }
+          });
+        });
+        
+        // PUT
+        // close issue by button click
         $('#issueDisplay').on('click','.closeIssue', function(e) {
           console.log($(this))
           var $this = $(this);
@@ -199,22 +262,9 @@
           });
           e.preventDefault();
         });
-
-        $('#issueDisplay').on('click','.deleteIssue', function(e) {
-          var url = "/api/issues/"+currentProject;
-          e.preventDefault();
-
-          $.ajax({
-            type: "DELETE",
-            url: url,
-            data: {_id: $(this).attr('id')},
-            success: function(data) {
-              removeIssueFromDom(e.target.id);
-              $('#jsonResult').text(JSON.stringify(data));
-            }
-          });
-        });
         
+        // DELETE
+        // helper delete function
         const removeIssueFromDom = (target) => {
           issues.forEach(issue => {
             /*
@@ -237,20 +287,9 @@
             }
           });
         }
-        
-        $('#testForm2').submit(function(e) {
-          e.preventDefault();
-          $.ajax({
-            url: url,
-            type: 'put',
-            data: $('#testForm2').serialize(),
-            success: function(data) {
-              $('#jsonResult').text(JSON.stringify(data));
-            }
-          });
-        });
-        
-        
+
+        // DELETE
+        // By entering ID
         $('#testForm3').submit(function(e) {
           e.preventDefault();
           $.ajax({
@@ -261,6 +300,25 @@
               if (data !== '_id error') {
                 removeIssueFromDom(e.target[0].value);
               }
+              $('#jsonResult').html(formatNotification(JSON.stringify(data)));
+            },
+            error: function(data) {
+              $('#jsonResult').html(formatNotification(JSON.stringify(data.responseText)));
+            }
+          });
+        });
+        
+        // DELETE
+        // By button click
+        $('#issueDisplay').on('click','.deleteIssue', function(e) {
+          var url = "/api/issues/"+currentProject;
+          e.preventDefault();
+          $.ajax({
+            type: "DELETE",
+            url: url,
+            data: {_id: $(this).attr('id')},
+            success: function(data) {
+              removeIssueFromDom(e.target.id);
               $('#jsonResult').text(JSON.stringify(data));
             }
           });
