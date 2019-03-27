@@ -128,7 +128,7 @@
           })
           return fi.join('');
         }
-        
+
          const closeNotification = () => {
           $('#jsonResult').click(function(index, item) {
             $('#jsonResult').html('')
@@ -313,6 +313,7 @@
         $('#issueDisplay').on('click','.deleteIssue', function(e) {
           var url = "/api/issues/"+currentProject;
           e.preventDefault();
+
           $.ajax({
             type: "DELETE",
             url: url,
