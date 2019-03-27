@@ -48,8 +48,6 @@
             <button type="submit" class="submit">Delete Issue</button>
           </form>
         </div>
-<!--         <div class="ifc__form"> 
-        </div> -->
         <div class="filters">
           <h3>
             Filter Issues
@@ -105,9 +103,31 @@
         var currentProject = window.location.pathname.replace(/\//g, "");
         var url = "/api/issues/"+currentProject;
         var issues = [];
-        const formatIssues = (issue) => {
-        
+          // takes array and returns string
+        const formatIssues = (filteredIssues) => {
+          // console.log('formatIssues', filteredIssues)
+          let fi = filteredIssues.map(filteredIssue => {
+            var openstatus;
+                (filteredIssue.open) ? openstatus = 'open' : openstatus = 'closed';
+                var single = [
+                  '<div class="issue '+openstatus+'">',
+                  '<p class="id">id: '+filteredIssue._id+'</p>',
+                  '<h3>'+filteredIssue.title+' -  ('+openstatus+')</h3>',
+                  '<br>',
+                  '<p>'+filteredIssue.text+'</p>',
+                  '<p>'+filteredIssue.statusText+'</p>',
+                  '<br>',
+                  '<p class="id"><b>Created by:</b> '+filteredIssue.author+'  <b>Assigned to:</b> '+filteredIssue.assignee,
+                  '<p class="id"><b>Created on:</b> '+filteredIssue.author+'  <b>Last updated:</b> '+filteredIssue.updatedOn,
+                  '<br><a href="#" class="closeIssue" id="'+filteredIssue._id+'">close?</a> <a href="#" class="deleteIssue" id="'+filteredIssue._id+'">delete?</a>',
+                  '</div>'
+                ];
+                return single.join('');
+          })
+          return fi.join('');
         }
+
+        // GET
         $.ajax({
           type: "GET",
           url: url,
@@ -135,7 +155,8 @@
             $('#issueDisplay').html(issues.join(''));
           }
         });
-          
+        
+
         $('#filter-form').submit(function(e) {
           e.preventDefault();
           $.ajax({
@@ -143,13 +164,12 @@
             type: 'post',
             data: $(this).serialize(),
             success: function(data) {
-              console.log('#filter-form',data);
-              issues = data.issues;
-              $('#issueDisplay').html(data.issues);
+              console.log(formatIssues(data.issues));
+              $('#issueDisplay').html(formatIssues(data.issues));
             }
           });
         })
-        
+        // POST
         $('#newIssue').submit(function(e){
           e.preventDefault();
           $(this).attr('action', "/api/issues/" + currentProject);
@@ -183,6 +203,21 @@
           });
         });    
         
+        // PUT
+        // by entering Id and fields
+        $('#testForm2').submit(function(e) {
+          e.preventDefault();
+          $.ajax({
+            url: url,
+            type: 'put',
+            data: $('#testForm2').serialize(),
+            success: function(data) {
+              $('#jsonResult').text(JSON.stringify(data));
+            }
+          });
+        });
+
+        // close issue by button click
         $('#issueDisplay').on('click','.closeIssue', function(e) {
           console.log($(this))
           var $this = $(this);
@@ -199,22 +234,10 @@
           });
           e.preventDefault();
         });
-
-        $('#issueDisplay').on('click','.deleteIssue', function(e) {
-          var url = "/api/issues/"+currentProject;
-          e.preventDefault();
-
-          $.ajax({
-            type: "DELETE",
-            url: url,
-            data: {_id: $(this).attr('id')},
-            success: function(data) {
-              removeIssueFromDom(e.target.id);
-              $('#jsonResult').text(JSON.stringify(data));
-            }
-          });
-        });
         
+        // DELETE
+
+        // helper delete function
         const removeIssueFromDom = (target) => {
           issues.forEach(issue => {
             /*
@@ -237,20 +260,8 @@
             }
           });
         }
-        
-        $('#testForm2').submit(function(e) {
-          e.preventDefault();
-          $.ajax({
-            url: url,
-            type: 'put',
-            data: $('#testForm2').serialize(),
-            success: function(data) {
-              $('#jsonResult').text(JSON.stringify(data));
-            }
-          });
-        });
-        
-        
+
+        // By entering ID
         $('#testForm3').submit(function(e) {
           e.preventDefault();
           $.ajax({
@@ -261,6 +272,22 @@
               if (data !== '_id error') {
                 removeIssueFromDom(e.target[0].value);
               }
+              $('#jsonResult').text(JSON.stringify(data));
+            }
+          });
+        });
+
+        // By button click
+        $('#issueDisplay').on('click','.deleteIssue', function(e) {
+          var url = "/api/issues/"+currentProject;
+          e.preventDefault();
+
+          $.ajax({
+            type: "DELETE",
+            url: url,
+            data: {_id: $(this).attr('id')},
+            success: function(data) {
+              removeIssueFromDom(e.target.id);
               $('#jsonResult').text(JSON.stringify(data));
             }
           });

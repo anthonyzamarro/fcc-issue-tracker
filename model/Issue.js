@@ -154,7 +154,6 @@ const updateIssue = (issue, cb) => {
 }
 
 const deleteIssue = (issue, cb) => {
-  // console.log('WE HAVE REACHED DELETE', issue)
   const projectId = issue.params.project;
   const issueId = issue.body._id;
   if (issueId == '') {
