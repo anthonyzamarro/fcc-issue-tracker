@@ -31,8 +31,9 @@ textarea {
 
 textarea {
   height: 100px;
-
 }
+
+
 
 .submit {
   height: 38px;
@@ -126,6 +127,14 @@ textarea {
   text-align: center;
   font-size: 28px;
   margin-bottom: 32px;
+  position: relative;
+}
+
+.close-notification {
+  position: absolute;
+  right: 0;
+  top: 0;
+  cursor: pointer;
 }
 
 .issue {
@@ -174,6 +183,7 @@ textarea {
   box-shadow: none;
   position: absolute;
   right: -1037px;
+  -webkit-appearance: none;
 }
 
 .checkbox >input:after {
@@ -186,14 +196,15 @@ textarea {
   left: -967px;
 }
 
-input[type=checkbox] + label {
-  color: purple;
-  background: yellow;
+/* Labels for checked inputs */
+input:checked + label {
+  color: red;
 }
 
-input[type=checkbox]:checked + label {
-  color: red;
-  background: blue;
+
+/* Checkbox element, when checked */
+input[type="checkbox"]:checked {
+  box-shadow: 0 0 0 3px hotpink;
 }
 
 .checkbox > label {
