@@ -17,9 +17,9 @@
     <div id='jsonResult' class="issue-notification"></div>
     <center>
       <div id='testui' class="issue-forms-container">
+        <h3>Submit a new issue</h3>
         <div class="ifc__form">
           <form id="newIssue" method="post" action="/api/">
-            <h3>Submit a new issue</h3>
             <input type="text" name="issue_title" placeholder="*Title" required=''><br>
             <textarea type="text" name="issue_text" placeholder="*Text" required=''></textarea><br>
             <input type="text" name="created_by" placeholder="*Created by" required=''>
@@ -28,9 +28,9 @@
             <button type="submit" class="submit">Create Issue</button>
           </form>
         </div>
+        <h3>Edit issue</h3>
         <div class="ifc__form"> 
           <form id="testForm2" class="form-edit">
-            <h3>Edit issue</h3>
             <input type="text" name="_id" placeholder="*_id" required=''><br>
             <input type="text" name="issue_title" placeholder="(opt)Title"><br>
             <textarea type="text" name="issue_text" placeholder="(opt)Text"></textarea><br>
@@ -49,11 +49,9 @@
             <button type="submit" class="submit">Delete Issue</button>
           </form>
         </div>
+        <h3>Filter Issues</h3>
         <div class="filters">
-          <h3>
-            Filter Issues
-          </h3>
-        <form id="filter-form" method="post">
+          <form id="filter-form" method="post">
           <div class="filter filter-title">
             <label>Title</label>
             <input type="text" id="filter-title" class="filter-input" name="title"/>
@@ -88,27 +86,26 @@
           </div>
           <button type="submit" id="filter-submit" class="submit">Filter</button>
           <button type="submit" id="filter-clear" class="submit">Clear</button>
-        </form>
+         </form>
         </div>
-        <div id='newIssueDisplay' class="new-issue-display"></div>
+        <!-- <div id='newIssueDisplay' class="new-issue-display"></div> -->
       </div>
       
-      <hr style='margin: 50px; margin-top: 200px'>
       <div id='issueDisplay' class="issue-display"></div>
     </center>
     
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"
             integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
             crossorigin="anonymous"></script>
-            
-   <!--  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 
     <script>
       $(function() {
 
-        // $( "#testui" ).accordion();
+        $( "#testui" ).accordion();
 
         var currentProject = window.location.pathname.replace(/\//g, "");
         var url = "/api/issues/"+currentProject;

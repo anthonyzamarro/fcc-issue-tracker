@@ -96,14 +96,16 @@ textarea {
 /*  issue.html */
 
 .issue-forms-container {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-evenly;
+  /*display: flex;*/
+  /*align-items: flex-start;*/
+  /*justify-content: space-evenly;*/
+  float: left;
 }
 
 .ifc__form {
-  flex: 0 0 33%;
+  /*flex: 0 0 33%;*/
   margin: 0 20px;
+  width: 300px;
 }
 
 .form-edit {
@@ -113,10 +115,6 @@ textarea {
 .issue-display {
   display: flex;
   flex-wrap: wrap;
-}
-
-.issue {
-  flex: 1 0 500px;
 }
 
 .issue-notification {
@@ -140,7 +138,7 @@ textarea {
 .issue {
   margin: 20px;
   padding: 5px;
-  width: 60%;
+  width:  43%;
   border: 2px solid black;
 }
 
@@ -154,9 +152,10 @@ textarea {
 
 
 .filter {
-  display: flex;
+  /*display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between;*/
+  widows: 300px;
 }
 
 .filter > input {
