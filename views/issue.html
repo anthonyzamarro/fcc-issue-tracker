@@ -8,13 +8,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   </head>
   <body>
     <header>
       <h1 id='projectTitle'></h1>
     </header>
+    <div id='jsonResult' class="issue-notification"></div>
     <center>
-      <div id='jsonResult' class="issue-notification"></div>
       <div id='testui' class="issue-forms-container">
         <div class="ifc__form">
           <form id="newIssue" method="post" action="/api/">
@@ -99,8 +100,16 @@
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"
             integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
             crossorigin="anonymous"></script>
+            
+   <!--  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> -->
+
+
     <script>
       $(function() {
+
+        // $( "#testui" ).accordion();
+
         var currentProject = window.location.pathname.replace(/\//g, "");
         var url = "/api/issues/"+currentProject;
         var issues = [];
