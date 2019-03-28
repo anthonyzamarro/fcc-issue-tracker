@@ -1,3 +1,4 @@
+    min-width: 30%;
 * {
   margin: 0px;
   padding: 0px;
@@ -100,6 +101,7 @@ textarea {
   /*align-items: flex-start;*/
   /*justify-content: space-evenly;*/
   float: left;
+  min-width: 30%;
 }
 
 .ifc__form {

@@ -29,7 +29,7 @@
           </form>
         </div>
         <h3>Edit issue</h3>
-        <div class="ifc__form"> 
+        <div class="ifc__form">
           <form id="testForm2" class="form-edit">
             <input type="text" name="_id" placeholder="*_id" required=''><br>
             <input type="text" name="issue_title" placeholder="(opt)Title"><br>
@@ -43,8 +43,10 @@
             </div>
             <button type="submit" class="submit">Submit Issue</button>
           </form>
+        </div>
+        <h3>Delete issue</h3>
+        <div class="ifc__form">
           <form id="testForm3" class="border">
-            <h3>Delete issue</h3>
             <input type="text" name="_id" placeholder="_id"><br>
             <button type="submit" class="submit">Delete Issue</button>
           </form>
@@ -105,7 +107,10 @@
     <script>
       $(function() {
 
-        $( "#testui" ).accordion();
+        // jquery accordion
+        $( "#testui" ).accordion({
+          collapsible: true
+        });
 
         var currentProject = window.location.pathname.replace(/\//g, "");
         var url = "/api/issues/"+currentProject;
@@ -151,32 +156,41 @@
         // GET
         // displays on page load
         $.ajax({
-          type: "GET",
-          url: url,
-          success: function(data)
-          {
-            data.issues.forEach(function(ele) {
-              var openstatus;
-              (ele.open) ? openstatus = 'open' : openstatus = 'closed';
-              var single = [
-                '<div class="issue '+openstatus+'">',
-                '<p class="id">id: '+ele._id+'</p>',
-                '<h3>'+ele.title+' -  ('+openstatus+')</h3>',
-                '<br>',
-                '<p>'+ele.text+'</p>',
-                '<p>'+ele.statusText+'</p>',
-                '<br>',
-                '<p class="id"><b>Created by:</b> '+ele.author+'  <b>Assigned to:</b> '+ele.assignee,
-                '<p class="id"><b>Created on:</b> '+ele.createdOn+'  <b>Last updated:</b> '+ele.updatedOn,
-                '<br><a href="#" class="closeIssue" id="'+ele._id+'">close?</a> <a href="#" class="deleteIssue" id="'+ele._id+'">delete?</a>',
-                '</div>'
-              ];
-              issues.push(single.join(''));
-            });
-            $('#projectTitle').text('All issues for: '+data.title);
-            $('#issueDisplay').html(issues.join(''));
-          }
-        });
+            type: "GET",
+            url: url,
+            success: function(data)
+            {
+              data.issues.forEach(function(ele) {
+                var openstatus;
+                (ele.open) ? openstatus = 'open' : openstatus = 'closed';
+                var single = [
+                  '<div class="issue '+openstatus+'">',
+                  '<p class="id">id: '+ele._id+'</p>',
+                  '<h3>'+ele.title+' -  ('+openstatus+')</h3>',
+                  '<br>',
+                  '<p>'+ele.text+'</p>',
+                  '<p>'+ele.statusText+'</p>',
+                  '<br>',
+                  '<p class="id"><b>Created by:</b> '+ele.author+'  <b>Assigned to:</b> '+ele.assignee,
+                  '<p class="id"><b>Created on:</b> '+ele.createdOn+'  <b>Last updated:</b> '+ele.updatedOn,
+                  '<br><a href="#" class="closeIssue" id="'+ele._id+'">close?</a> <a href="#" class="deleteIssue" id="'+ele._id+'">delete?</a>',
+                  '</div>'
+                ];
+                issues.push(single.join(''));
+              });
+              $('#projectTitle').text('All issues for: '+data.title);
+              $('#issueDisplay').html(issues.join(''));
+            }
+          });
+
+
+        // $('#issueDisplay').pagination({
+        //   dataSource: function(done) {
+        //   }
+        // });
+
+
+
                 
         // GET
         // reset display from filters
