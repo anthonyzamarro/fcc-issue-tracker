@@ -36,58 +36,6 @@ const getIssues = (projectId, cb) => {
   });
 }
 
-const filterIssues = (issue, cb) => {
-  let projectId = issue.params.project
-  let searchTitle = issue.body.title;
-  let text = issue.body.text;
-  let author = issue.body.author;
-  let assignee = issue.body.assignee;
-  let statusText = issue.body.statusText;
-  let createdOn = issue.body.createdOn;
-  let updatedOn = issue.body.updatedOn;
-  let open = issue.body.open == 'on' ? true : false;
-  
-  const isEmpty = Object.values(issue.body).every(x => (x === null || x === ''));
-  
-  if  (isEmpty) {
-    cb('empty filters', 200);
-    return;
-  }
-
-  Project.aggregate([
-      {$project: 
-        {
-          issues: {
-            $filter: {
-              input: '$issues',
-              as: 'issue',
-              cond: { $or: [
-                  {$eq: ['$$issue.title', searchTitle]},
-                  {$eq: ['$$issue.text', text]},
-                  {$eq: ['$$issue.author', author]},
-                  {$eq: ['$$issue.assignee', assignee]},
-                  {$eq: ['$$issue.statusText', statusText]},
-                  {$eq: ['$$issue.createdOn', createdOn]},
-                  // {$eq: ['$$issue.updatedOn', updatedOn]},
-                  // {$eq: ['$$issue.open', open]},
-                ]}
-            }
-          }
-        }
-      }
-    ]).then(data => {
-    Project.findById(projectId, (err, doc) => {
-      if (err) console.log('Issue.js filteredIssue err', err)
-      data.filter(d => {
-        if (d._id == projectId) {
-          // console.log(d)
-          cb(d, 200);
-        }
-      })
-    })
-  })
-}
-
 const createIssue = (issue, cb) => {
 	const projectId = issue.params.project;
 
@@ -102,8 +50,8 @@ const createIssue = (issue, cb) => {
 			author: issue.body.created_by,
 			assignee: issue.body.assigned_to,
 			statusText: issue.body.status_text,
-			createdOn: new Date(),
-			updatedOn: new Date(),
+			createdOn: moment().format('MM-DD-YYYY'),
+			updatedOn: moment().format('MM-DD-YYYY'),
 			open: true
 		})
 		doc.issues.push(newIssue);
@@ -136,7 +84,7 @@ const updateIssue = (issue, cb) => {
     	let filteredIssue = doc.issues.filter(is => {if (is._id == issueId) return is});
     	let ourIssue = filteredIssue[0];
     	if (empty) {
-  			ourIssue.updatedOn = moment().format('YYYY-MM-DD hh:mm a');
+  			ourIssue.updatedOn = moment().format('YYYY-MM-DD');
     		doc.markModified('issues');
 	      doc.save();
     		cb('no updated field sent', 200);
@@ -148,7 +96,7 @@ const updateIssue = (issue, cb) => {
         ourIssue.assignee = issue.body.assigned_to == '' ? ourIssue.assignee : issue.body.assigned_to;
         ourIssue.statusText = issue.body.status_text == '' ? ourIssue.statusText : issue.body.status_text;
         ourIssue.open = issue.body.open == 'on' || issue.body.open == 'true' ? ourIssue.open = false : issue.body.open = true;
-        ourIssue.updatedOn = moment().format('YYYY-MM-DD hh:mm a');
+        ourIssue.updatedOn = moment().format('YYYY-MM-DD');
 	      doc.markModified('issues');
 	      doc.save();
 	      cb('successfully updated', 200);
@@ -185,6 +133,80 @@ const deleteIssue = (issue, cb) => {
       // doc.save();
     // });
   }
+}
+
+const filterIssues = (issue, cb) => {
+  let projectId = issue.params.project
+  let searchTitle = issue.body.title;
+  let text = issue.body.text;
+  let author = issue.body.author;
+  let assignee = issue.body.assignee;
+  let statusText = issue.body.statusText;
+  let createdOn = issue.body.createdOn;
+  let updatedOn = issue.body.updatedOn;
+  let open = issue.body.open == 'open' ? true : false;
+  
+  console.log(issue.body)
+  
+  const isEmpty = Object.values(issue.body).every(x => (x === null || x === ''));
+  
+  if  (isEmpty) {
+    cb('empty filters', 200);
+    return;
+  }
+  
+  const formatDateToQuery = (date) => {
+    if (date == '') return {year: 1800, month: 11, day: 11};
+     const getDate = date.split('-');
+     let dateObj = {
+        year: Number(getDate[0]),
+        month: Number(getDate[1]),
+        day: Number(getDate[2]),
+      }
+    return dateObj;  
+  }
+  
+  let created = formatDateToQuery(createdOn);
+  
+  let updated = formatDateToQuery(updatedOn);
+  
+
+  Project.aggregate([
+      {$project: 
+        {
+          issues: {
+            $filter: {
+              input: '$issues',
+              as: 'issue',
+              cond: { $or: [
+                  {$eq: ['$$issue.title', searchTitle]},
+                  {$eq: ['$$issue.text', text]},
+                  {$eq: ['$$issue.author', author]},
+                  {$eq: ['$$issue.assignee', assignee]},
+                  {$eq: ['$$issue.statusText', statusText]},
+                  {$eq: ['$$issue.createdOn', {$dateFromParts: {
+                                                'year' : created.year, 'month' : created.month, 'day': created.day
+                                             }}]},
+                  {$eq: ['$$issue.updatedOn', {$dateFromParts: {
+                                                'year' : updated.year, 'month' : updated.month, 'day': updated.day
+                                             }}]},
+                  {$eq: ['$$issue.open', open]},
+                ]}
+            }
+          }
+        }
+      }
+    ]).then(data => {
+    Project.findById(projectId, (err, doc) => {
+      if (err) console.log('Issue.js filteredIssue err', err)
+      data.filter(d => {
+        if (d._id == projectId) {
+          // console.log(d)
+          cb(d, 200);
+        }
+      })
+    })
+  })
 }
 
 module.exports = {

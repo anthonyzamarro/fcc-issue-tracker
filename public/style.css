@@ -7,6 +7,7 @@
 body {
   padding: 10px;
   font-family: Tahoma, Geneva, sans-serif;
+  background: #353232;
 }
 h1,h2,h3,h4,h5,h6 {
   font-family: Impact, Charcoal, sans-serif;
@@ -47,7 +48,7 @@ textarea {
   float: right;
   clear: both;
   position: relative;
-  top: 21px;
+  margin: 0 6px;
 }
 
 .add-project__submit {
@@ -95,17 +96,12 @@ textarea {
 
 
 /*  issue.html */
-
 .issue-forms-container {
-  /*display: flex;*/
-  /*align-items: flex-start;*/
-  /*justify-content: space-evenly;*/
   float: left;
   min-width: 30%;
 }
 
 .ifc__form {
-  /*flex: 0 0 33%;*/
   margin: 0 20px;
   width: 300px;
 }
@@ -138,10 +134,11 @@ textarea {
 }
 
 .issue {
-  margin: 20px;
+  margin: 0 20px 20px;
   padding: 5px;
   width:  43%;
   border: 2px solid black;
+  background: #fff;
 }
 
 .closed {
@@ -152,66 +149,81 @@ textarea {
   font-size: 10.5px;
 }
 
-
 .filter {
-  /*display: flex;
-  align-items: center;
-  justify-content: space-between;*/
-  widows: 300px;
+  text-align: left;
 }
 
-.filter > input {
-  width: 50%;
-  margin-left: 10px;
-  
-}
-
-.checkbox {
+.filter-buttons-container {
   display: flex;
-  align-items: center;
+  justify-content: flex-end;
+}
+
+.myCheckbox {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.myCheckbox input {
+  position: relative;
+  z-index: -9999;
+  max-width: 49px;
+  display: inline-block;
+}
+
+.myCheckbox span {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border: 1px solid black;
+  cursor: pointer;
+  position: relative;
+  top: -43px;
+  left: 25px;
+}
+
+.myCheckbox input:checked + span {
+  background: green;
+  display: inline-block;
   position: relative;
 }
 
-/* .checkbox > input,
-.checkbox > label {
-  flex: 1 0 100px;
-} */
-
-.checkbox > input {
-  text-align: right;
-  max-width: 100px;
-  height: 15px;
-  box-shadow: none;
+.checkmark {
+  background: #fff;
+  border-bottom: 1px solid #fff;
+  border-top: 1px solid #fff;
+  border-left: 7px solid #fff;
   position: absolute;
-  right: -1037px;
-  -webkit-appearance: none;
+  left: 6px;
+  top: 8px;
+  width: 7px;
+  transform: rotate(-44deg);
 }
 
-.checkbox >input:after {
+.checkmark:before {
   content: "";
-  height: 25px;
-  width: 25px;
-  border: 1px solid black;
-  display: block;
+  background: #fff;
+  border-bottom: 1px solid #fff;
+  border-top: 1px solid #fff;
+  border-right: 5px solid #fff;
   position: absolute;
-  left: -967px;
-}
-
-/* Labels for checked inputs */
-input:checked + label {
-  color: red;
+  left: -10px;
+  top: -4px;
+  width: 2px;
+  transform: rotate(84deg);
 }
 
 
-/* Checkbox element, when checked */
-input[type="checkbox"]:checked {
-  box-shadow: 0 0 0 3px hotpink;
+/*  adjust jquery ui styles */
+
+.ui-accordion-header {
+  background: lightgreen;
 }
 
-.checkbox > label {
-  text-align: left;
-  flex: 1;
+.ui-accordion-content {
+  border: none;
 }
+
 
 
 @media screen and (max-width: 560px) {

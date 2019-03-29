@@ -10,6 +10,7 @@ dependencies:
   moment: 2.24.0
   mongodb: 2.2.36
   mongoose: 5.4.20
+  paginationjs: 2.1.4
   zombie: 5.0.8
 devDependencies:
   nodemon: 1.18.10
@@ -2056,6 +2057,10 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha1-iGmgQBJTZhxMTKPabCEh7VVfXu0=
+  /paginationjs/2.1.4:
+    dev: false
+    resolution:
+      integrity: sha512-A4V7YGOXDMIbUtiGdrmYTvnxxU+JTzg1Ktxd9Z+uSDOt9OxK9FfOlzAFKPNVnZDKKAm8lzFeSxVpTb+pGNWOxA==
   /parse5/1.5.1:
     dev: false
     resolution:
@@ -2991,4 +2996,5 @@ specifiers:
   mongodb: ^2.2.16
   mongoose: ^5.4.19
   nodemon: ^1.18.10
+  paginationjs: ^2.1.4
   zombie: ^5.0.5
