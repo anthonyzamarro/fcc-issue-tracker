@@ -29,13 +29,12 @@ textarea {
   background: none;
   border: 1px solid;
   box-shadow: inset 0px 0px 1px #333;
+  background: #fff;
 }
 
 textarea {
   height: 100px;
 }
-
-
 
 .submit {
   height: 38px;
@@ -218,6 +217,10 @@ textarea {
 
 .ui-accordion-header {
   background: lightgreen;
+  padding: 8px 0;
+  margin: 0 0 12px 0;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .ui-accordion-content {
