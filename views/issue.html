@@ -8,17 +8,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   </head>
   <body>
     <header>
       <h1 id='projectTitle'></h1>
     </header>
+    <div id='jsonResult' class="issue-notification"></div>
     <center>
-      <div id='jsonResult' class="issue-notification"></div>
       <div id='testui' class="issue-forms-container">
+        <h3>Submit a new issue</h3>
         <div class="ifc__form">
           <form id="newIssue" method="post" action="/api/">
-            <h3>Submit a new issue</h3>
             <input type="text" name="issue_title" placeholder="*Title" required=''><br>
             <textarea type="text" name="issue_text" placeholder="*Text" required=''></textarea><br>
             <input type="text" name="created_by" placeholder="*Created by" required=''>
@@ -27,32 +28,33 @@
             <button type="submit" class="submit">Create Issue</button>
           </form>
         </div>
-        <div class="ifc__form"> 
+        <h3>Edit issue</h3>
+        <div class="ifc__form">
           <form id="testForm2" class="form-edit">
-            <h3>Edit issue</h3>
             <input type="text" name="_id" placeholder="*_id" required=''><br>
             <input type="text" name="issue_title" placeholder="(opt)Title"><br>
             <textarea type="text" name="issue_text" placeholder="(opt)Text"></textarea><br>
             <input type="text" name="created_by" placeholder="(opt)Created by"><br>
             <input type="text" name="assigned_to" placeholder="(opt)Assigned to"><br>
             <input type="text" name="status_text" placeholder="(opt)Status text"><br>
-            <div class="checkbox">
-              <label>Check to close issue</label>
-              <input type="checkbox" name="open"> 
-            </div>
+            <label for="test">Open</label>
+            <label class="myCheckbox">
+                <input type="checkbox" name="open"/>
+                <span><div class="checkmark"></div></span>
+            </label>
             <button type="submit" class="submit">Submit Issue</button>
           </form>
+        </div>
+        <h3>Delete issue</h3>
+        <div class="ifc__form">
           <form id="testForm3" class="border">
-            <h3>Delete issue</h3>
             <input type="text" name="_id" placeholder="_id"><br>
             <button type="submit" class="submit">Delete Issue</button>
           </form>
         </div>
+        <h3>Filter Issues</h3>
         <div class="filters">
-          <h3>
-            Filter Issues
-          </h3>
-        <form id="filter-form" method="post">
+          <form id="filter-form" method="post">
           <div class="filter filter-title">
             <label>Title</label>
             <input type="text" id="filter-title" class="filter-input" name="title"/>
@@ -75,32 +77,61 @@
           </div>
           <div class="filter filter-created-on">
             <label>Created On</label>
-            <input type="text" id="filter-created-on" class="filter-input" name="created-on"/>
+            <input type="text" id="filter-created-on" class="filter-input" name="createdOn" placeholder="format: YYYY-MM-DD"/>
           </div>
           <div class="filter filter-updated-on">
             <label>Updated On</label>
-            <input type="text" id="filter-updated-on" class="filter-input" name="updated-on"/>
+            <input type="text" id="filter-updated-on" class="filter-input" name="updatedOn" placeholder="format: YYYY-MM-DD"/>
           </div>
-          <div class="filter-open checkbox">
-            <label>Open</label>
-            <input type="checkbox" id="filter-open" class="filter-checkbox" name="open"/>
-          </div>
-          <button type="submit" id="filter-submit" class="submit">Filter</button>
-          <button type="submit" id="filter-clear" class="submit">Clear</button>
-        </form>
+            <div class="filter">
+              <label for="status-select">Status</label>
+              <select id="status-select" name="open">
+                <option value="">--Please choose an option--</option>
+                <option value="open">Open</option>
+                <option value="closed">Closed</option>
+            </select>
+
+            </div>
+<!--           <div class="filter">
+            <label for="test">Open</label>
+            <label class="myCheckbox">
+              <input type="checkbox" name="open" class="checkbox"/>
+              <span><div class="checkmark"></div></span>
+            </label>
+          </div> -->
+<!--             <div class="filter">
+              <label for="test">Close</label>
+              <label class="myCheckbox">
+                <input type="checkbox" name="close" class="checkbox"/>
+                <span><div class="checkmark"></div></span>
+              </label>
+            </div> -->
+            <div class="filter-buttons-container">
+              <button type="submit" id="filter-submit" class="submit">Filter</button>
+              <button type="submit" id="filter-clear" class="submit">Clear</button>
+            </div>
+         </form>
         </div>
-        <div id='newIssueDisplay' class="new-issue-display"></div>
       </div>
-      
-      <hr style='margin: 50px; margin-top: 200px'>
       <div id='issueDisplay' class="issue-display"></div>
     </center>
     
     <script src="https://code.jquery.com/jquery-2.2.1.min.js"
             integrity="sha256-gvQgAFzTH6trSrAWoH1iPo9Xc96QxSZ3feW6kem+O00="
             crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
     <script>
       $(function() {
+
+        // jquery accordion
+        $( "#testui" ).accordion({
+          collapsible: true
+        });
+
         var currentProject = window.location.pathname.replace(/\//g, "");
         var url = "/api/issues/"+currentProject;
         var issues = [];
@@ -145,32 +176,33 @@
         // GET
         // displays on page load
         $.ajax({
-          type: "GET",
-          url: url,
-          success: function(data)
-          {
-            data.issues.forEach(function(ele) {
-              var openstatus;
-              (ele.open) ? openstatus = 'open' : openstatus = 'closed';
-              var single = [
-                '<div class="issue '+openstatus+'">',
-                '<p class="id">id: '+ele._id+'</p>',
-                '<h3>'+ele.title+' -  ('+openstatus+')</h3>',
-                '<br>',
-                '<p>'+ele.text+'</p>',
-                '<p>'+ele.statusText+'</p>',
-                '<br>',
-                '<p class="id"><b>Created by:</b> '+ele.author+'  <b>Assigned to:</b> '+ele.assignee,
-                '<p class="id"><b>Created on:</b> '+ele.createdOn+'  <b>Last updated:</b> '+ele.updatedOn,
-                '<br><a href="#" class="closeIssue" id="'+ele._id+'">close?</a> <a href="#" class="deleteIssue" id="'+ele._id+'">delete?</a>',
-                '</div>'
-              ];
-              issues.push(single.join(''));
-            });
-            $('#projectTitle').text('All issues for: '+data.title);
-            $('#issueDisplay').html(issues.join(''));
-          }
-        });
+            type: "GET",
+            url: url,
+            success: function(data)
+            {
+              data.issues.forEach(function(ele) {
+                var openstatus;
+                (ele.open) ? openstatus = 'open' : openstatus = 'closed';
+                var single = [
+                  '<div class="issue '+openstatus+'">',
+                  '<p class="id">id: '+ele._id+'</p>',
+                  '<h3>'+ele.title+' -  ('+openstatus+')</h3>',
+                  '<br>',
+                  '<p>'+ele.text+'</p>',
+                  '<p>'+ele.statusText+'</p>',
+                  '<br>',
+                  '<p class="id"><b>Created by:</b> '+ele.author+'  <b>Assigned to:</b> '+ele.assignee,
+                  '<p class="id"><b>Created on:</b> '+ele.createdOn+'  <b>Last updated:</b> '+ele.updatedOn,
+                  '<br><a href="#" class="closeIssue" id="'+ele._id+'">close?</a> <a href="#" class="deleteIssue" id="'+ele._id+'">delete?</a>',
+                  '</div>'
+                ];
+                issues.push(single.join(''));
+              });
+              $('#projectTitle').text('All issues for: '+data.title);
+              $('#issueDisplay').html(issues.join(''));
+            }
+          });
+
                 
         // GET
         // reset display from filters
@@ -182,6 +214,7 @@
             success: function(data) {
               $('#issueDisplay').html(formatIssues(data.issues));
               $('.filter-input').val('');
+              $('.checkbox').prop('checked',false)
             }
           });
         });
