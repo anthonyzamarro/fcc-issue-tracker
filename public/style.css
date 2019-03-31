@@ -65,6 +65,20 @@ label {
 }
 
 /* index.html */
+.how-to {
+  margin-left: 5%;
+  margin-top: 5%;
+}
+
+.how-to h2 {
+  color: #fff;
+}
+
+.how-to p {
+  color: #fff;
+  font-size: 18px;
+}
+
 .add-project {
   max-width: 1400px;
   margin: 0 auto;
@@ -90,7 +104,8 @@ label {
   font-size: 24px;
   font-variant: small-caps;
   text-decoration: none;
-  color: #084d5f;
+  /*color: #084d5f;*/
+  color: #fff;
 }
 
 .project-list__item:hover {
