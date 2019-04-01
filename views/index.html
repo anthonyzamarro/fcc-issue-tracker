@@ -94,7 +94,8 @@
               //                           .toLowerCase()
               //                           .replace(/[^\w ]+/g,'')
               //                           .replace(/ +/g,'-');
-              $('#jsonData').html('<div>Project successfully created! visit it here:</div><a href="'+data._doc._id+'>'+data._doc.title+'</a>')
+              console.log(data._doc);
+              $('#jsonData').html('<div class="new-project-container">Project successfully created! visit it here:<a href="'+data._doc._id+'">'+data._doc.title+'</div>')
               // $('#project-list').append('<li>'+ data._doc.title +'</li>')
             }
           });

@@ -79,6 +79,11 @@ label {
   font-size: 18px;
 }
 
+.new-project-container {
+  background: #fff;
+  color: #000;
+}
+
 .add-project {
   max-width: 1400px;
   margin: 0 auto;
