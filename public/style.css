@@ -1,4 +1,3 @@
-    min-width: 30%;
 * {
   margin: 0px;
   padding: 0px;
@@ -9,11 +8,14 @@ body {
   font-family: Tahoma, Geneva, sans-serif;
   background: #353232;
 }
+
 h1,h2,h3,h4,h5,h6 {
   font-family: Impact, Charcoal, sans-serif;
 }
 
-
+h1 {
+  color: #fff;
+}
 
 li {
   list-style: none;
@@ -29,13 +31,16 @@ textarea {
   background: none;
   border: 1px solid;
   box-shadow: inset 0px 0px 1px #333;
+  background: #fff;
 }
 
 textarea {
   height: 100px;
 }
 
-
+label {
+  color: #fff;
+}
 
 .submit {
   height: 38px;
@@ -48,7 +53,6 @@ textarea {
   float: right;
   clear: both;
   position: relative;
-  margin: 0 6px;
 }
 
 .add-project__submit {
@@ -61,6 +65,25 @@ textarea {
 }
 
 /* index.html */
+.how-to {
+  margin-left: 5%;
+  margin-top: 5%;
+}
+
+.how-to h2 {
+  color: #fff;
+}
+
+.how-to p {
+  color: #fff;
+  font-size: 18px;
+}
+
+.new-project-container {
+  background: #fff;
+  color: #000;
+}
+
 .add-project {
   max-width: 1400px;
   margin: 0 auto;
@@ -80,14 +103,14 @@ textarea {
   height: 36px;
   border-radius: 5px;
   border: 1px solid gray;
-/*   box-shadow: 0px 1px 0px #ededed; */
 }
 
 .project-list__item {
   font-size: 24px;
   font-variant: small-caps;
   text-decoration: none;
-  color: #084d5f;
+  /*color: #084d5f;*/
+  color: #fff;
 }
 
 .project-list__item:hover {
@@ -96,7 +119,6 @@ textarea {
 
 
 /*  issue.html */
-
 .issue-forms-container {
   float: left;
   min-width: 30%;
@@ -123,13 +145,14 @@ textarea {
   border-radius: 5px;
   text-align: center;
   font-size: 28px;
+  /*padding: 10px;*/
   margin-bottom: 32px;
   position: relative;
 }
 
 .close-notification {
   position: absolute;
-  right: 0;
+  right: 12px;
   top: 0;
   cursor: pointer;
 }
@@ -143,7 +166,7 @@ textarea {
 }
 
 .closed {
-  background-color: lightgrey;
+  background-color: #a38d58;
 }
 
 .id {
@@ -162,16 +185,26 @@ textarea {
 .myCheckbox {
   display: inline-block;
   vertical-align: top;
+  float: left;
 }
 
 .myCheckbox input {
-  position: relative;
-  z-index: -9999;
-  max-width: 49px;
+  /*position: relative;
+  z-index: -9999;*/
   display: inline-block;
+  vertical-align: middle;
+  width: 20px;
 }
 
-.myCheckbox span {
+#filter-submit {
+  margin-right: 6px;
+}
+
+ #status-select {
+  background: #fff; 
+}
+
+/*.myCheckbox span {
   display: inline-block;
   width: 20px;
   height: 20px;
@@ -213,12 +246,16 @@ textarea {
   width: 2px;
   transform: rotate(84deg);
 }
-
+*/
 
 /*  adjust jquery ui styles */
 
 .ui-accordion-header {
   background: lightgreen;
+  padding: 8px 0;
+  margin: 0 0 12px 0;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .ui-accordion-content {
@@ -229,10 +266,7 @@ textarea {
 
 @media screen and (max-width: 560px) {
   .issue-forms-container {
-    flex-direction: column;
-  }
-  .issue-display {
-    flex-direction: column;
+    float: none;
   }
   .issue {
     width: 100%;
@@ -246,8 +280,5 @@ textarea {
   }
   .submit {
     height: 30px;
-  }
-  .checkbox > input {
-    height: 20px;
   }
 }

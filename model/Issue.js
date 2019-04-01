@@ -50,8 +50,8 @@ const createIssue = (issue, cb) => {
 			author: issue.body.created_by,
 			assignee: issue.body.assigned_to,
 			statusText: issue.body.status_text,
-			createdOn: moment().format('MM-DD-YYYY'),
-			updatedOn: moment().format('MM-DD-YYYY'),
+			createdOn: moment().format('YYYY-MM-DD'),
+			updatedOn: moment().format('YYYY-MM-DD'),
 			open: true
 		})
 		doc.issues.push(newIssue);
@@ -144,9 +144,17 @@ const filterIssues = (issue, cb) => {
   let statusText = issue.body.statusText;
   let createdOn = issue.body.createdOn;
   let updatedOn = issue.body.updatedOn;
-  let open = issue.body.open == 'open' ? true : false;
+  // let open = issue.body.open == '' ? '' : issue.body.open == '' false;
+  let open;
+  if (issue.body.open === '') {
+    open = '';
+  } else if (issue.body.open == 'open') {
+    open = true;
+  } else if (issue.body.open == 'closed') {
+    open = false;
+  }
   
-  console.log(issue.body)
+  console.log(open)
   
   const isEmpty = Object.values(issue.body).every(x => (x === null || x === ''));
   
@@ -167,8 +175,11 @@ const filterIssues = (issue, cb) => {
   }
   
   let created = formatDateToQuery(createdOn);
-  
+
+
   let updated = formatDateToQuery(updatedOn);
+
+  console.log(updated, created);
   
 
   Project.aggregate([
@@ -201,7 +212,7 @@ const filterIssues = (issue, cb) => {
       if (err) console.log('Issue.js filteredIssue err', err)
       data.filter(d => {
         if (d._id == projectId) {
-          // console.log(d)
+          console.log(d)
           cb(d, 200);
         }
       })
