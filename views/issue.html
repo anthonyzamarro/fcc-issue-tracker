@@ -20,11 +20,11 @@
         <h3>Submit a new issue</h3>
         <div class="ifc__form">
           <form id="newIssue" method="post" action="/api/">
-            <input type="text" name="issue_title" placeholder="*Title" required=''><br>
-            <textarea type="text" name="issue_text" placeholder="*Text" required=''></textarea><br>
-            <input type="text" name="created_by" placeholder="*Created by" required=''>
-            <input type="text" name="assigned_to" placeholder="(opt)Assigned to">
-            <input type="text" name="status_text" placeholder="(opt)Status text"><br>
+            <input type="text" name="issue_title" placeholder="*Title" required='' maxlength="50"><br>
+            <textarea type="text" name="issue_text" placeholder="*Text" required='' maxlength="200"></textarea><br>
+            <input type="text" name="created_by" placeholder="*Created by" required='' maxlength="50">
+            <input type="text" name="assigned_to" placeholder="(opt)Assigned to" maxlength="50">
+            <input type="text" name="status_text" placeholder="(opt)Status text" maxlength="50"><br>
             <button type="submit" class="submit">Create Issue</button>
           </form>
         </div>
@@ -32,13 +32,13 @@
         <div class="ifc__form">
           <form id="testForm2" class="form-edit">
             <input type="text" name="_id" placeholder="*_id" required=''><br>
-            <input type="text" name="issue_title" placeholder="(opt)Title"><br>
-            <textarea type="text" name="issue_text" placeholder="(opt)Text"></textarea><br>
-            <input type="text" name="created_by" placeholder="(opt)Created by"><br>
-            <input type="text" name="assigned_to" placeholder="(opt)Assigned to"><br>
-            <input type="text" name="status_text" placeholder="(opt)Status text"><br>
+            <input type="text" name="issue_title" placeholder="(opt)Title" maxlength="50"><br>
+            <textarea type="text" name="issue_text" placeholder="(opt)Text" maxlength="200"></textarea><br>
+            <input type="text" name="created_by" placeholder="(opt)Created by" maxlength="50"><br>
+            <input type="text" name="assigned_to" placeholder="(opt)Assigned to" maxlength="50"><br>
+            <input type="text" name="status_text" placeholder="(opt)Status text" maxlength="50"><br>
             <label class="myCheckbox">
-                <label for="test">Open</label>
+                <label for="test">Closed</label>
                 <input type="checkbox" name="open"/>
                 <!-- <span><div class="checkmark"></div></span> -->
             </label>
@@ -57,23 +57,23 @@
           <form id="filter-form" method="post">
           <div class="filter filter-title">
             <label>Title</label>
-            <input type="text" id="filter-title" class="filter-input" name="title"/>
+            <input type="text" id="filter-title" class="filter-input" name="title" maxlength="50"/>
           </div>
           <div class="filter filter-text">
             <label>Text</label>
-            <input type="text" id="filter-text" class="filter-input" name="text"/>
+            <input type="text" id="filter-text" class="filter-input" name="text" maxlength="50"/>
           </div>
           <div class="filter filter-author">
             <label>Author</label>
-            <input type="text" id="filter-author" class="filter-input" name="author"/>
+            <input type="text" id="filter-author" class="filter-input" name="author" maxlength="50"/>
           </div>
           <div class="filter filter-assignee">
             <label>Assignee</label>
-            <input type="text" id="filter-assignee" class="filter-input" name="assignee"/>
+            <input type="text" id="filter-assignee" class="filter-input" name="assignee" maxlength="50"/>
           </div>
           <div class="filter filter-status-text">
             <label>Status Text</label>
-            <input type="text" id="filter-status-text" class="filter-input" name="statusText"/>
+            <input type="text" id="filter-status-text" class="filter-input" name="statusText" maxlength="50"/>
           </div>
           <div class="filter filter-created-on">
             <label>Created On</label>

@@ -2,7 +2,7 @@
 
   This project is a part of the [FreeCodeCamp](https://www.freecodecamp.com) APIs & Microservices track.
 
-  You can view my finished work [here](https://fcc-issue-tracks.glitch.me/).
+  You can view my finished work [here](https://fcc-ex-trac.glitch.me/).
 
 ## How to use
 - Create a project on the main page
